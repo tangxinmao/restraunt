@@ -1,0 +1,389 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://app.toutiao.com/news_article/ -->
+<html>
+	<head>
+	#set($root=$request.getContextPath())
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link href="$root/static/css/webpage.css" rel="stylesheet"/>
+    <script src="$root/static/js/jquery-1.11.1.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+	<!-- <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>-->
+    <title>Order History</title>
+
+
+<style type="text/css">
+.tit_le{
+	background-color: #fff;
+    width: 95%;
+    margin: 0.5rem auto;
+    position: relative;
+    color:#999999;
+    
+    
+}
+.tit_le h1{
+    font-size: 0.7rem;
+    height: 1.6rem;
+    padding-top: 0.55rem;
+    margin-left: 0.5rem;
+    border-bottom: 0.1rem solid #e3e3e3;
+    width: 93%;
+}
+.tit_le .hr{
+    height: 0.04rem;
+    background-color: #D0D0D0;
+    width: 93%;
+    margin-left: 0.5rem;
+    margin-top: 0.1rem;
+    width: 93%;
+}
+.star{
+	height:4rem;
+	position: relative;
+	
+}
+.star .s1{
+    width: 1.8rem;
+    position: absolute;
+    top: 1rem;
+    left: 1.8rem;
+}
+.star .s2{
+    width: 1.8rem;
+    position: absolute;
+    top: 1rem;
+    left: 4.2rem;
+}
+.star .s3{
+    width: 1.8rem;
+    position: absolute;
+    top: 1rem;
+    left: 6.6rem;
+}
+.star .s4{
+    width: 1.8rem;
+    position: absolute;
+    top: 1rem;
+    left: 9.0rem;
+}
+.star .s5{
+    width: 1.8rem;
+    position: absolute;
+    top: 1rem;
+    left: 11.4rem;
+}
+.smile{
+	height:4rem;
+	position: relative;
+	margin-top: 1.5rem;
+}
+.smile label{
+	font-size:0.7rem;
+	margin-left:0.5rem;
+}
+.taste .t1{
+	
+}
+.t1{
+	width:1.5rem;
+	position: absolute;
+    top: 0rem;
+    left: 3.4rem;
+}
+.t2{
+	width:1.5rem;
+	position: absolute;
+    top: 0rem;
+    left: 5.2rem;
+}
+.t3{
+	width:1.5rem;
+	position: absolute;
+    top: 0rem;
+    left: 7.0rem;
+}
+.t4{
+	width:1.5rem;
+	position: absolute;
+    top: 0rem;
+    left: 8.8rem;
+}
+.t5{
+	width:1.5rem;
+	position: absolute;
+    top: 0rem;
+    left: 10.6rem;
+}
+.service{
+    margin-top: 1rem;
+}
+.se1{
+	width:1.5rem;
+	position: absolute;
+    top: 2.1rem;
+    left: 3.4rem;
+}
+.se2{
+	width:1.5rem;
+	position: absolute;
+    top: 2.1rem;
+    left: 5.2rem;
+}
+.se3{
+	width:1.5rem;
+	position: absolute;
+    top: 2.1rem;
+    left: 7.0rem;
+}
+.se4{
+	width:1.5rem;
+	position: absolute;
+    top: 2.1rem;
+    left: 8.8rem;
+}
+.se5{
+	width:1.5rem;
+	position: absolute;
+    top: 2.1rem;
+    left: 10.6rem;
+}
+.img{
+	height:1rem;
+}
+#note{
+    margin-top: 1.5rem;
+    width: 93%;
+    margin-left: 0.5rem;
+    height: 7rem;
+    border: 1px solid #D3D3D3;
+    font-size: 0.7rem;
+}
+.submit{
+	position:fixed;
+	bottom: 0;
+	left:0;
+	width:100%;
+	height:2.7rem;
+	background-color: #FF8B1D;
+	color:#fff;
+	border: aliceblue;
+	font-size: 1rem;
+}
+.success { position: fixed; _position: absolute; padding: 0; margin: 0; width: 5rem; height:5rem;  top: 35%; left:35%; z-index: 9999; background-color: #000; overflow: hidden; zoom: 1;    opacity: 0.7;}
+.success img{
+    width: 2rem;
+    margin-left: 1.6rem;
+    margin-top: 0.7rem;
+}
+.success p{
+    color: #fff;
+    font-size: 0.7rem;
+    margin: 0.5rem;
+    margin-left: 0.8rem;
+}
+</style>
+</head>
+<body>
+<input type="hidden" id="rootsite" name="rootsite" value="$root">  
+<input type="hidden" id="memberId" name="memberId" value="$memberId">
+<input type="hidden" id="orderId" name="orderId" value="$order.orderId">
+<input type="hidden" id="vendorId" name="vendorId" value="$merchant.vendorId">
+<input type="hidden" id="merchantId" name="merchantId" value="$merchant.merchantId">
+<div class="main">
+	<div class="tit_le">
+		<h1>$merchant.name</h1>
+		<div class="hr"></div>
+		<div class="star">
+			<img class="s1" src="$root/static/images/food/ic_star_unselected.png">
+			<img class="s2" src="$root/static/images/food/ic_star_unselected.png">
+			<img class="s3" src="$root/static/images/food/ic_star_unselected.png">
+			<img class="s4" src="$root/static/images/food/ic_star_unselected.png">
+			<img class="s5" src="$root/static/images/food/ic_star_unselected.png">
+			<input type="hidden" id="starnum" value="0">
+		</div>
+		<div class="smile">
+			<div class="taste">
+				<label>Taste:</label>
+				<img class="t1" src="$root/static/images/food/ic_face_unselected.png">
+				<img class="t2" src="$root/static/images/food/ic_face_unselected.png">
+				<img class="t3" src="$root/static/images/food/ic_face_unselected.png">
+				<img class="t4" src="$root/static/images/food/ic_face_unselected.png">
+				<img class="t5" src="$root/static/images/food/ic_face_unselected.png">
+				<input type="hidden" id="tastenum" value="0">
+			</div>
+			<div class="service">
+				<label>Service:</label>
+				<img class="se1" src="$root/static/images/food/ic_face_unselected.png">
+				<img class="se2" src="$root/static/images/food/ic_face_unselected.png">
+				<img class="se3" src="$root/static/images/food/ic_face_unselected.png">
+				<img class="se4" src="$root/static/images/food/ic_face_unselected.png">
+				<img class="se5" src="$root/static/images/food/ic_face_unselected.png">
+				<input type="hidden" id="servicenum" value="0"    >
+			</div>
+		</div>
+		<textarea id="note"  onkeydown="checkEnter(event)" maxlength="140"></textarea>
+		<button class="submit">Submit</button>
+	</div>
+</div>
+<div class="shade_layout" style="display:none"></div>
+<div class="success" style="display:none">
+	<img src="$root/static/images/food/ic_topup_successfully.png">
+	<p>Successfully</p>
+</div>
+
+<script type="text/javascript">
+!function(){function a(){document.documentElement.style.fontSize=document.documentElement.clientWidth/16+"px"; document.getElementsByTagName("html")[0].style.height="auto";}var b=null; window.addEventListener("resize",function(){clearTimeout(b),b=setTimeout(a,1)},!1),a();}(window);
+</script>
+<script type="text/javascript">
+    function checkEnter(e) {
+        var et = e || window.event;
+        var keycode = et.charCode || et.keyCode;
+        if (keycode == 13) {
+            if (window.event)
+                window.event.returnValue = false;
+            else
+                e.preventDefault();//for firefox
+        }
+    }
+window.addEventListener("touchmove",function(){ 
+ 	window.addEventListener("touchend",stopTouchendPropagation, true);
+ 	function stopTouchendPropagation(ev){
+        ev.stopPropagation();
+        setTimeout(function(){
+            window.removeEventListener('touchend', stopTouchendPropagation, true);
+        }, 50);
+    }
+ });
+window.alert = function(name){
+		var iframe = document.createElement("IFRAME");
+		iframe.style.display="none";
+		iframe.setAttribute("src", 'data:text/plain,');
+		document.documentElement.appendChild(iframe);
+		window.frames[0].window.alert(name);
+		iframe.parentNode.removeChild(iframe);
+	}
+window.confirm = function(name){
+	var iframe = document.createElement("IFRAME");
+	iframe.style.display="none";
+	iframe.setAttribute("src", 'data:text/plain,');
+	document.documentElement.appendChild(iframe);
+	window.frames[0].window.confirm(name);
+	iframe.parentNode.removeChild(iframe);
+}
+ $(function(){
+	 $(".desc").on("touchend",function(){
+		 var root = $("#rootsite").val();
+		 var orderId = $(".desc").find("input[name='orderId']").val();
+		 self.location= root+"/page/orderdetail?orderId="+orderId;
+	 });
+	 $(".to").on("touchend",function(){
+		 var root = $("#rootsite").val();
+		 var orderId = $(".desc").find("input[name='orderId']").val();
+		 self.location= root+"/page/review?orderId="+orderId;
+	 });
+	 $(".star img").on("touchend",function(){
+		var root = $("#rootsite").val();
+		var pos =  $(this).parent().prevAll().length + 1;
+		//alert($(this).index());
+		for(var i=0;i<$(".star img").length;i++){
+			$(".star img").eq(i).attr("src",(root+"/static/images/food/ic_star_unselected.png"));
+		}
+		for(var i=0;i<=$(this).index();i++){
+			$(".star img").eq(i).attr("src",(root+"/static/images/food/ic_star_selected.png"));
+			$("#starnum").val($(this).index()+1);
+		}
+	 });
+	 $(".taste img").on("touchend",function(){
+		var root = $("#rootsite").val();
+		var index = $(this).index();
+		for(var i=0;i<$(".taste img").length;i++){
+			$(".taste img").eq(i).attr("src",(root+"/static/images/food/ic_face_unselected.png"));
+		}
+		for(var i=0;i<index;i++){
+			if(index==1){
+				$(".taste img").eq(i).attr("src",(root+"/static/images/food/ic_face_bad.png"));
+			}
+			else{
+				$(".taste img").eq(i).attr("src",(root+"/static/images/food/ic_face_selected.png"));
+			}
+		}
+		$("#tastenum").val(index);
+	 });
+	 $(".service img").on("touchend",function(){
+		var root = $("#rootsite").val();
+		var index = $(this).index();
+		for(var i=0;i<$(".service img").length;i++){
+			$(".service img").eq(i).attr("src",(root+"/static/images/food/ic_face_unselected.png"));
+		}
+		for(var i=0;i<index;i++){
+			if(index==1){
+				$(".service img").eq(i).attr("src",(root+"/static/images/food/ic_face_bad.png"));
+			}
+			else{
+				$(".service img").eq(i).attr("src",(root+"/static/images/food/ic_face_selected.png"));
+			}
+		}
+		$("#servicenum").val(index);
+	 });
+	 $(".submit").on("touchend",function(){
+		var root = $("#rootsite").val();
+		var memberId = $("#memberId").val();
+		var orderId = $("#orderId").val();
+		var productScore = $("#tastenum").val();
+		var serviceScore = $("#servicenum").val();
+		var merchantId = $("#merchantId").val();
+		var score = $("#starnum").val();
+		var vendorId = $("#vendorId").val();
+		var content = $("#note").val();
+		$.post(root+"/page/toreview", {"memberId":memberId,"orderId":orderId,"productScore":productScore,
+			"serviceScore":serviceScore,"score":score,"merchantId":merchantId,"vendorId":vendorId,"content":content},
+			function(data){
+				 var jsonObjArr = JSON.parse(data);
+				 if(jsonObjArr.code=="1"){
+					 $(".shade_layout").show();
+					 $(".success").show();
+					 setTimeout(success, 1000)
+				 }
+		    }
+		);
+		
+	 });
+	 $(".shade_layout,.success").on("touchend",function(){
+		 var memberId = $("#memberId").val();
+		 self.location="history?memberId="+memberId;
+	 });
+ 	 
+  });
+ function goThisPage(ta){
+		var currentPage = parseInt($("#currentPage").val()) + 1;
+		$("#currentPage").val(currentPage);
+		var memberId = $("#memberId").val();
+		$.post("$root/page/history", {"currentPage":currentPage,"memberId":memberId},
+			function(data){
+				$(".main").append(data);
+		    }
+		);
+	}
+ function format_number(n){
+   var b=parseInt(n).toString();
+   var len=b.length;
+   if(len<=3){return b;}
+   var r=len%3;
+   return r>0?b.slice(0,r)+"."+b.slice(r,len).match(/\d{3}/g).join("."):b.slice(r,len).match(/\d{3}/g).join(".");
+ }
+ function close(){
+	 $(".shade_layout").hide();
+	 $(".popup").hide();
+ }
+ function success(){
+	 var orderId = $("#orderId").val();
+	 location.replace("reviewdetail?orderId="+orderId);
+ }
+
+</script>
+<script type="text/javascript" src="$root/static/js/zepto.js"></script>
+<script type="text/javascript" src="$root/static/js/bootstrap.min.js"></script>
+</body>
+</html>

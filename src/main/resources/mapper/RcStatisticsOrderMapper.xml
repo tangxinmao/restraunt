@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.socool.soft.dao.RcStatisticsOrderMapper">
+    <resultMap id="BaseResultMap" type="com.socool.soft.bo.RcStatisticsOrder">
+        <id column="statistics_order_id" property="statisticsOrderId" jdbcType="BIGINT"/>
+        <result column="merchant_id" property="merchantId" jdbcType="INTEGER"/>
+        <result column="order_count" property="orderCount" jdbcType="INTEGER"/>
+        <result column="table_turnover_rate" property="tableTurnoverRate" jdbcType="REAL"/>
+        <result column="sale_sum" property="saleSum" jdbcType="DECIMAL"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        statistics_order_id, merchant_id, order_count, table_turnover_rate, sale_sum, create_time
+    </sql>
+
+    <insert id="insertAndStatistics">
+        INSERT INTO rc_statistics_order (`merchant_id`, `order_count`, `table_turnover_rate`, `sale_sum`, `create_time`)
+        select
+        MERCHANT_ID,
+        count(1) as order_count,
+        (
+        ifnull(
+        if((count(1)-(select count(1) from rc_merchant_table mt where mt.MERCHANT_ID=o.MERCHANT_ID GROUP BY
+        MERCHANT_ID))&lt;0,NULL,
+        (count(1)-(select count(1) from rc_merchant_table mt where mt.MERCHANT_ID=o.MERCHANT_ID GROUP BY MERCHANT_ID))
+        )
+        /(select count(1) from rc_merchant_table mt where mt.MERCHANT_ID=o.MERCHANT_ID GROUP BY MERCHANT_ID)*100,0)
+        ) as table_turnover_rate,
+        sum(o.PAY_PRICE) as sale_sum,
+        #{startTime}
+        FROM rc_order o
+        where
+        o.SELLER_STATUS=5
+        and o.CREATE_TIME &gt;= #{startTime}
+        and o.CREATE_TIME &lt; #{endTime}
+        GROUP BY o.MERCHANT_ID
+    </insert>
+
+    <select id="select" resultMap="BaseResultMap" parameterType="com.socool.soft.bo.RcStatisticsOrder">
+        select
+        <include refid="Base_Column_List"/>
+        from rc_statistics_order
+        <where>
+            <if test="statisticsOrderId != null">
+                and statistics_order_id = #{statisticsOrderId}
+            </if>
+            <if test="merchantId != null">
+                and merchant_id = #{merchantId,jdbcType=INTEGER}
+            </if>
+            <if test="orderCount != null">
+                and order_count = #{orderCount,jdbcType=INTEGER}
+            </if>
+            <if test="tableTurnoverRate != null">
+                and table_turnover_rate = #{tableTurnoverRate,jdbcType=REAL}
+            </if>
+            <if test="saleSum != null">
+                and sale_sum = #{saleSum,jdbcType=DECIMAL}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from rc_statistics_order
+        where statistics_order_id = #{statisticsOrderId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from rc_statistics_order
+        where statistics_order_id = #{statisticsOrderId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.socool.soft.bo.RcStatisticsOrder">
+        insert into rc_statistics_order (statistics_order_id, merchant_id, order_count,
+        table_turnover_rate, sale_sum, create_time
+        )
+        values (#{statisticsOrderId,jdbcType=BIGINT}, #{merchantId,jdbcType=INTEGER}, #{orderCount,jdbcType=INTEGER},
+        #{tableTurnoverRate,jdbcType=REAL}, #{saleSum,jdbcType=DECIMAL}, #{createTime,jdbcType=DATE}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.socool.soft.bo.RcStatisticsOrder">
+        insert into rc_statistics_order
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="statisticsOrderId != null">
+                statistics_order_id,
+            </if>
+            <if test="merchantId != null">
+                merchant_id,
+            </if>
+            <if test="orderCount != null">
+                order_count,
+            </if>
+            <if test="tableTurnoverRate != null">
+                table_turnover_rate,
+            </if>
+            <if test="saleSum != null">
+                sale_sum,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="statisticsOrderId != null">
+                #{statisticsOrderId,jdbcType=BIGINT},
+            </if>
+            <if test="merchantId != null">
+                #{merchantId,jdbcType=INTEGER},
+            </if>
+            <if test="orderCount != null">
+                #{orderCount,jdbcType=INTEGER},
+            </if>
+            <if test="tableTurnoverRate != null">
+                #{tableTurnoverRate,jdbcType=REAL},
+            </if>
+            <if test="saleSum != null">
+                #{saleSum,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.socool.soft.bo.RcStatisticsOrder">
+        update rc_statistics_order
+        <set>
+            <if test="merchantId != null">
+                merchant_id = #{merchantId,jdbcType=INTEGER},
+            </if>
+            <if test="orderCount != null">
+                order_count = #{orderCount,jdbcType=INTEGER},
+            </if>
+            <if test="tableTurnoverRate != null">
+                table_turnover_rate = #{tableTurnoverRate,jdbcType=REAL},
+            </if>
+            <if test="saleSum != null">
+                sale_sum = #{saleSum,jdbcType=DECIMAL},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=DATE},
+            </if>
+        </set>
+        where statistics_order_id = #{statisticsOrderId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.socool.soft.bo.RcStatisticsOrder">
+        update rc_statistics_order
+        set merchant_id = #{merchantId,jdbcType=INTEGER},
+        order_count = #{orderCount,jdbcType=INTEGER},
+        table_turnover_rate = #{tableTurnoverRate,jdbcType=REAL},
+        sale_sum = #{saleSum,jdbcType=DECIMAL},
+        create_time = #{createTime,jdbcType=DATE}
+        where statistics_order_id = #{statisticsOrderId,jdbcType=BIGINT}
+    </update>
+</mapper>

@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.socool.soft.dao.RcStatisticsOrderReceivingMapper">
+    <resultMap id="BaseResultMap" type="com.socool.soft.bo.RcStatisticsOrderReceiving">
+        <id column="statistics_order_receiving_id" property="statisticsOrderReceivingId" jdbcType="BIGINT"/>
+        <result column="merchant_id" property="merchantId" jdbcType="INTEGER"/>
+        <result column="merchant_user_id" property="merchantUserId" jdbcType="INTEGER"/>
+        <result column="order_receiving_count" property="orderReceivingCount" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        statistics_order_receiving_id, merchant_id, merchant_user_id, order_receiving_count, create_time
+    </sql>
+
+    <insert id="insertAndStatistics">
+        INSERT INTO `rc_statistics_order_receiving` (`merchant_id`, `merchant_user_id`, `order_receiving_count`, `create_time`)
+        SELECT
+        mu.MERCHANT_ID,
+        oo.MEMBER_ID,
+        count(1) as order_receiving_count,
+        #{startTime}
+        FROM rc_order_operation oo
+        JOIN rc_merchant_user mu ON mu.MERCHANT_USER_ID=oo.MEMBER_ID
+        WHERE
+        oo.OPERATION_TYPE=2
+        and oo.OPERATION_TIME &gt;= #{startTime}
+        and oo.OPERATION_TIME &lt; #{endTime}
+        GROUP BY oo.MEMBER_ID
+    </insert>
+
+    <select id="select" resultMap="BaseResultMap" parameterType="com.socool.soft.bo.RcStatisticsOrderReceiving">
+        select
+        <include refid="Base_Column_List"/>
+        from rc_statistics_order_receiving
+        <where>
+            <if test="merchantId != null">
+                and merchant_id = #{merchantId,jdbcType=INTEGER}
+            </if>
+            <if test="merchantUserId != null">
+                and merchant_user_id = #{merchantUserId,jdbcType=INTEGER}
+            </if>
+            <if test="orderReceivingCount != null">
+                and order_receiving_count = #{orderReceivingCount,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from rc_statistics_order_receiving
+        where statistics_order_receiving_id = #{statisticsOrderReceivingId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from rc_statistics_order_receiving
+        where statistics_order_receiving_id = #{statisticsOrderReceivingId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.socool.soft.bo.RcStatisticsOrderReceiving">
+        insert into rc_statistics_order_receiving (statistics_order_receiving_id, merchant_id,
+        merchant_user_id, order_receiving_count, create_time
+        )
+        values (#{statisticsOrderReceivingId,jdbcType=BIGINT}, #{merchantId,jdbcType=INTEGER},
+        #{merchantUserId,jdbcType=INTEGER}, #{orderReceivingCount,jdbcType=INTEGER}, #{createTime,jdbcType=DATE}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.socool.soft.bo.RcStatisticsOrderReceiving">
+        insert into rc_statistics_order_receiving
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="statisticsOrderReceivingId != null">
+                statistics_order_receiving_id,
+            </if>
+            <if test="merchantId != null">
+                merchant_id,
+            </if>
+            <if test="merchantUserId != null">
+                merchant_user_id,
+            </if>
+            <if test="orderReceivingCount != null">
+                order_receiving_count,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="statisticsOrderReceivingId != null">
+                #{statisticsOrderReceivingId,jdbcType=BIGINT},
+            </if>
+            <if test="merchantId != null">
+                #{merchantId,jdbcType=INTEGER},
+            </if>
+            <if test="merchantUserId != null">
+                #{merchantUserId,jdbcType=INTEGER},
+            </if>
+            <if test="orderReceivingCount != null">
+                #{orderReceivingCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.socool.soft.bo.RcStatisticsOrderReceiving">
+        update rc_statistics_order_receiving
+        <set>
+            <if test="merchantId != null">
+                merchant_id = #{merchantId,jdbcType=INTEGER},
+            </if>
+            <if test="merchantUserId != null">
+                merchant_user_id = #{merchantUserId,jdbcType=INTEGER},
+            </if>
+            <if test="orderReceivingCount != null">
+                order_receiving_count = #{orderReceivingCount,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=DATE},
+            </if>
+        </set>
+        where statistics_order_receiving_id = #{statisticsOrderReceivingId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.socool.soft.bo.RcStatisticsOrderReceiving">
+        update rc_statistics_order_receiving
+        set merchant_id = #{merchantId,jdbcType=INTEGER},
+        merchant_user_id = #{merchantUserId,jdbcType=INTEGER},
+        order_receiving_count = #{orderReceivingCount,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=DATE}
+        where statistics_order_receiving_id = #{statisticsOrderReceivingId,jdbcType=BIGINT}
+    </update>
+</mapper>

@@ -1,0 +1,175 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://app.toutiao.com/news_article/ -->
+<html>
+	<head>
+	#set($root=$request.getContextPath())
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link href="$root/static/css/webpage.css" rel="stylesheet"/>
+    <script src="$root/static/js/jquery-1.11.1.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+	<!-- <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>-->
+    <title>Order History</title>
+
+
+<style type="text/css">
+.card{
+	background-color: #fff;
+    width: 95%;
+    margin: 0.5rem auto;
+    position: relative;
+}
+.card h1{
+    font-size: 0.7rem;
+    height: 1.6rem;
+    padding-top: 0.55rem;
+    margin-left: 0.5rem;
+}
+.card .hr{
+    height: 0.02rem;
+    background-color: #D0D0D0;
+    width: 93%;
+    margin-left: 0.5rem;
+}
+.card p{
+    font-size: 0.6rem;
+    margin-left: 0.5rem;
+    color: #999999;
+}
+.card .review{
+	height:2.3rem;
+	font-size: 0.7rem;
+}
+.review .lebel{
+	margin-left: 0.5rem;
+    font-weight: bolder;
+    line-height: 2.5rem;
+}
+.review .to{
+    float: right;
+    margin-right: 0.7rem;
+    line-height: 2.3rem;
+    color:#999999;
+}
+.complete{
+	width: 4rem;
+    position: absolute;
+    right: 0rem;
+    bottom: 0;
+}
+.img{
+	height:1rem;
+}
+.ims{
+    position: absolute;
+    width: 0.35rem;
+    right: 0.1rem;
+    bottom: 0.86rem;
+}
+</style>
+</head>
+<body>
+<input type="hidden" id="rootsite" name="rootsite" value="$root">  
+<input type="hidden" id="memberId" name="memberId" value="$memberId">
+<input type="hidden" value="1" id="currentPage" />  
+<div class="main">
+	#foreach($order in $list)
+		<div class="card" id="$order.orderId">
+			<div class="desc">
+				<input type="hidden" name="orderId" value="$order.orderId">
+				<h1>$order.merchantName</h1>
+				<div class="hr"></div>
+				<p>Order Time: $viewutil.dateFormat($order.createTime)</p>
+				<p>Grand Total: Rp$viewutil.moneyStringFormat2($order.payPrice)</p>
+			</div>
+			#if($order.hasEval==0)
+			<div class="hr"></div>
+			<div class="review">
+				<span class="lebel">Review</span>
+				<span class="to">To review</span>
+				<img class="ims" alt="" src="$root/static/images/food/ic_more.png">  
+			</div>
+			#else
+				<div class="img">
+					<img class="complete" src="$root/static/images/food/ic_stamp_completed.png">
+				</div>
+			#end
+		</div> 
+	#end
+</div>
+<script type="text/javascript">
+!function(){function a(){document.documentElement.style.fontSize=document.documentElement.clientWidth/16+"px"; document.getElementsByTagName("html")[0].style.height="auto";}var b=null; window.addEventListener("resize",function(){clearTimeout(b),b=setTimeout(a,1)},!1),a();}(window);
+</script>
+<script type="text/javascript">
+window.addEventListener("touchmove",function(){ 
+ 	window.addEventListener("touchend",stopTouchendPropagation, true);
+ 	function stopTouchendPropagation(ev){
+        ev.stopPropagation();
+        setTimeout(function(){
+            window.removeEventListener('touchend', stopTouchendPropagation, true);
+        }, 50);
+    }
+ });
+window.alert = function(name){
+		var iframe = document.createElement("IFRAME");
+		iframe.style.display="none";
+		iframe.setAttribute("src", 'data:text/plain,');
+		document.documentElement.appendChild(iframe);
+		window.frames[0].window.alert(name);
+		iframe.parentNode.removeChild(iframe);
+	}
+window.confirm = function(name){
+	var iframe = document.createElement("IFRAME");
+	iframe.style.display="none";
+	iframe.setAttribute("src", 'data:text/plain,');
+	document.documentElement.appendChild(iframe);
+	window.frames[0].window.confirm(name);
+	iframe.parentNode.removeChild(iframe);
+}
+ $(function(){
+	 $(window).scroll(function(){
+		 if ($(document).scrollTop() >= $(document).height() - $(window).height()) {
+			 goThisPage();
+		    }
+	});
+	 $(".desc").on("touchend",function(){
+		 var root = $("#rootsite").val();
+		 var orderId = $(this).find("input[name='orderId']").val();
+		 self.location= root+"/page/orderdetail?orderId="+orderId;
+	 });
+	 $(".to").on("touchend",function(){
+		 var root = $("#rootsite").val();
+		 var orderId = $(this).parent().parent().find("div[class='desc']").find("input[name='orderId']").val();
+		 var memberId = $("#memberId").val();
+		 self.location= root+"/page/review?orderId="+orderId+"&memberId="+memberId;
+	 });
+ 	 
+  });
+ function goThisPage(ta){
+		var currentPage = parseInt($("#currentPage").val()) + 1;
+		$("#currentPage").val(currentPage);
+		var memberId = $("#memberId").val();
+		$.post("$root/page/history", {"currentPage":currentPage,"memberId":memberId},
+			function(data){
+				$(".main").append(data);
+		    }
+		);
+	}
+ function format_number(n){
+   var b=parseInt(n).toString();
+   var len=b.length;
+   if(len<=3){return b;}
+   var r=len%3;
+   return r>0?b.slice(0,r)+"."+b.slice(r,len).match(/\d{3}/g).join("."):b.slice(r,len).match(/\d{3}/g).join(".");
+ }
+ function close(){
+	 $(".shade_layout").hide();
+	 $(".popup").hide();
+ }
+
+</script>
+<script type="text/javascript" src="$root/static/js/zepto.js"></script>
+<script type="text/javascript" src="$root/static/js/bootstrap.min.js"></script>
+</body>
+</html>

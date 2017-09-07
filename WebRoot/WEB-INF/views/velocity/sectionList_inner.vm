@@ -1,0 +1,25 @@
+<div class="service_wrap">
+	<table class="table order_table mt10">
+		<th>ID</th>
+		<th>Name</th>
+		<th>Number of tables</th>
+		<th>Actions</th>
+		
+		#foreach($item in $list)
+		<tr>
+			<td>$item.sectionId</p></td>
+			<td>$item.name</td>
+			<td>$item.tables.size()</td>
+			<td>
+				<a href="javascript:void(0)" onclick="showModifyPopup('$item.sectionId',this)">Edit</a> |
+				<a href="javascript:void(0)" onclick="showConfirm('Are you sure to delete the data? If you deleted,The data can not be restore.',&quot;deleteItem('$item.sectionId')&quot;)">Delete</a>
+			</td>
+		</tr>
+		#end
+	</table>
+	<input type="hidden" value="$!page.currentPage" id="currentPage">
+	<input id="page_pageSize" type="hidden" value="$page.pageSize" />
+	<input id="page_totalRows" type="hidden" value="$page.totalRows" />
+	<div id="pageNm_tip" style="text-align: right; color:red; margin-bottom:20px"></div>
+	<div class="page_wrap" style="padding-right: 10px">#vm_page2</div>
+</div>

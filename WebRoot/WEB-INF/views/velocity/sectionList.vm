@@ -1,0 +1,202 @@
+#set($layout = "layout/main.vm")  
+#set($title = "Banner list" )
+#set($root=$request.getContextPath())
+<div class="rightContent fl">
+	<div class="tpos ml30 mt25">
+	 	<h1 class="fl">Section&Table Mgmt</h1>
+	 	<div class="fr">
+			<input class="btnG bwt163 bht39 bfz16 fr mt12" type="button" value="Add" onclick="addSectionPopup()">
+		</div>
+	</div>
+	<div class="data_logic ml30">
+		<div id="reloadSearchMessages">
+			<div class="service_wrap">
+				<table class="table order_table mt10">
+					<th>ID</th>
+					<th>Name</th>
+					<th>Number of tables</th>
+					<th>Actions</th>
+					
+					#foreach($item in $list)
+					<tr>
+						<td>$item.sectionId</p></td>
+						<td>$item.name</td>
+						<td>$item.tables.size()</td>
+						<td>
+							<a href="javascript:void(0)" onclick="showModifyPopup('$item.sectionId',this)">Edit</a> |
+							<a href="javascript:void(0)" onclick="showConfirm('Are you sure to delete the data? If you deleted,The data can not be restore.',&quot;deleteItem('$item.sectionId')&quot;)">Delete</a>
+						</td>
+					</tr>
+					#end
+				</table>
+				<input type="hidden" value="$!page.currentPage" id="currentPage">
+				<input id="page_pageSize" type="hidden" value="$page.pageSize" />
+				<input id="page_totalRows" type="hidden" value="$page.totalRows" />
+				<div id="pageNm_tip" style="text-align: right; color:red; margin-bottom:20px"></div>
+				<div class="page_wrap" style="padding-right: 10px">#vm_page2</div>
+			</div>
+		</div>	
+	</div>
+</div>
+<div class="shade_layout" style="display: none;"></div>
+	<div class="pop_windows" id="addPopDiv" style="display:none;">
+		<div class="layout">
+			<a  class="ico_close" href="javascript:close();" ></a> 
+			<div class="main">
+				<div class="hd">
+					<h2>Add Section&Table</h2>
+				</div>
+				<div class="bd_p10" style="padding-left:82px">
+					<div style="margin-top:20px;">
+                		<lebel class="colortitle" style="margin-left: -19px;"><span class="colorRed">*</span>Section Name:</lebel>
+			        	<input type="text" class="poptxt" name="name" id="name" value="" maxlength="50">
+                	</div>
+                	<div style="margin-top:20px;">
+                		<lebel class="colortitle" style="margin-left: -19px;"><span class="colorRed">*</span>Table Number:</lebel>
+			        	<input type="text" class="poptxt" name="tableNumber" id="tableNumber" value="" maxlength="3">
+                	</div>
+				</div>
+				<div class="popup_btn_con" id="popup_btn_con" myvalue="">
+					<input class="btnG bwt100 bht30 bfz16"  type="button" onclick="saveSection()" id="saveBtn" value="Submit" />
+				</div>
+			</div>
+		</div>
+	</div>
+	
+	<div class="pop_windows" id="modifyPopDiv" style="display:none;">
+		<div class="layout">
+			<a  class="ico_close" href="javascript:close();" ></a> 
+			<div class="main">
+				<div class="hd">
+					<h2>Modify Section&Table</h2>
+				</div>
+				<div class="bd_p10" style="padding-left:82px">
+					<input type="hidden" id="sectionId" value="">
+					<div style="margin-top:20px;">
+                		<lebel class="colortitle" style="margin-left: -19px;"><span class="colorRed">*</span>Section Name:</lebel>
+			        	<input type="text" class="poptxt" name="upname" id="upname" value="" maxlength="50">
+                	</div>
+                	<div style="margin-top:20px;">
+                		<lebel class="colortitle" style="margin-left: -19px;"><span class="colorRed">*</span>Table Number:</lebel>
+			        	<input type="text" class="poptxt" name="uptableNumber" id="uptableNumber" value="" maxlength="3">
+                	</div>
+				</div>
+				<div class="popup_btn_con" id="popup_btn_con" myvalue="">
+					<input class="btnG bwt100 bht30 bfz16"  type="button" onclick="modifySection()" id="modifyBtn" value="Submit" />
+				</div>
+			</div>
+		</div>
+	</div>
+<script  type="text/javascript" >
+	function goThisPage(ta){
+		var currentPage = '';
+		if(ta == 'search'){
+			currentPage = 1;
+		}else if(ta == '+'){//下一页
+			//当前页
+			currentPage = parseInt($('#currentPage').val()) + 1;
+		}else if(ta == '-'){
+			currentPage = parseInt($('#currentPage').val()) - 1;
+		}else if(ta == '='){
+			currentPage = $("#page_currentPage").val();
+			var reg =/^\d+$/;
+			if(!currentPage.match(reg) || parseInt(currentPage) <= 0 ){
+				$("#pageNm_tip").text('please input Positive integer!');
+				return;
+			}
+			var pageSize = $("#page_pageSize").val();
+			var totalRow = $("#page_totalRows").val();
+			var totalPage = Math.ceil(parseInt(totalRow)/parseInt(pageSize));
+			if (parseInt(currentPage) > totalPage) {
+				$("#pageNm_tip").text('the total page is :' + totalPage);
+				return;
+			}
+		}else{
+			currentPage = ta;
+		}
+		$.post("$root/table/sectionlist", {"currentPage":currentPage},
+			function(data){
+			    $("#reloadSearchMessages").empty().html(data);
+		    }
+		);
+	}
+	function addSectionPopup(){
+		$("#addPopDiv").find("#name").val("");
+		$("#addPopDiv").find("#tableNumber").val("");
+		$("#addPopDiv").show();
+		$("#shade_layout").show();
+		pop_center('560');
+	}
+	function saveSection(){
+		var name = $("#name").val();
+		var tableNumber = $("#tableNumber").val();
+		if(name==""){
+			alertWarn("Name can not be null");
+			return 0;
+		}
+		if(tableNumber==""){
+			alertWarn("Table Number can not be null");
+			return 0;
+		}
+		$.post("$root/table/save", {"name":name,"tableNumber":tableNumber},
+			function(data){
+				var jsonObjArr = JSON.parse(data);
+				if(jsonObjArr.code=="1"){
+					close();
+				}
+				else{
+					alertWarn("error");
+				}
+				goThisPage($('#currentPage').val());
+		    }
+		);
+	}
+	function showModifyPopup(sectionId,obj){
+		$("#modifyPopDiv").show();
+		$("#shade_layout").show();
+		var $td = $(obj).parent().parent().find("td");
+		$("#upname").val($td.eq(1).text());
+		$("#uptableNumber").val($td.eq(2).text());
+		$("#sectionId").val(sectionId);
+		pop_center('560');
+	}
+	function modifySection(){
+		var sectionId = $("#sectionId").val();
+		var name = $("#upname").val();
+		var tableNumber = $("#uptableNumber").val();
+		$.post("$root/table/modify", {"sectionId":sectionId,"name":name,"tableNumber":tableNumber},
+			function(data){
+				var jsonObjArr = JSON.parse(data);
+				if(jsonObjArr.code=="1"){
+					close();
+				}
+				else{
+					alertWarn("error");
+				}
+				goThisPage($('#currentPage').val());
+				
+		    }
+		);
+	}
+	function deleteItem(sectionId){
+		$.post("$root/table/delete", {"sectionId":sectionId},
+			function(data){
+				var jsonObjArr = JSON.parse(data);
+				if(jsonObjArr.code=="1"){
+					close();
+				}
+				else{
+					alertWarn("error");
+				}
+				goThisPage($('#currentPage').val());
+				
+		    }
+		);
+	}
+</script>
+<script type="text/javascript" src="$root/static/js/common.js"></script>
+<script type="text/javascript" src="$root/static/assets/js/bui-min.js"></script>
+<script type="text/javascript" src="$root/static/assets/js/config-min.js"></script>
+<script type="text/javascript" src="$root/static/js/message.js"></script>
+</body>
+</html>

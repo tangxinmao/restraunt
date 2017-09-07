@@ -1,0 +1,547 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1,user-scalable=no">
+    #set($root=$request.getContextPath())
+    <title>ORDER</title>
+    <!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet"
+          href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <!-- HTML5 shim and Respond.js for IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://cdn.bootcss.com/html5shiv/3.7.3/html5shiv.min.js"></script>
+    <script src="https://cdn.bootcss.com/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+
+        body {
+            background-color: #F3F3F5;
+        }
+
+        div {
+            background-color: white;
+        }
+
+        .div-margin-top {
+            margin-top: 0.3rem;
+        }
+
+        .hr {
+            height: 0.01rem;
+            background-color: #D2D2D2;
+        }
+
+        .form-group {
+            margin-left: 0rem !important;
+            margin-right: 0rem !important;
+        }
+
+        .form-group div {
+            padding-right: 0rem;
+        }
+
+        .control-label {
+            padding-left: 0rem;
+            font-size: 0.7rem;
+            font-weight: normal;
+        }
+
+        .hr2 {
+            border-width: 0.01rem;
+            border-color: #D2D2D2;
+            border-style: solid;
+            border-left-width: 0;
+            border-right-width: 0;
+            height: 0.12rem;
+
+        }
+
+        h4 {
+            font-size: 0.7rem;
+            font-weight: normal;
+        }
+
+        .media {
+            padding-left: 0rem;
+            padding-right: 0rem;
+        }
+
+        .media-object {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        textarea {
+            height: 3rem !important;
+        }
+
+        .interval {
+            margin-top: 0.2rem;
+        }
+
+        .form-group div p {
+            font-size: 0.8rem;
+        }
+
+        .media-body div label {
+            font-size: 0.6rem;
+        }
+
+        .form-group div p {
+            font-size: 0.7rem;
+            font-weight: normal;
+        }
+         .ims{
+        	position: absolute;
+		    width: 0.35rem;
+		    top: 0.2rem;
+		    right: 0.1rem;
+        }
+    </style>
+</head>
+<body>
+
+<div class="clearfix" hidden>
+    <div class="col-md-12 col-xs-12  alert" role="alert"
+         style="background-image: url($root/static/images/food/top_popup_bg_bg.png);background-size: contain;background-repeat: no-repeat;
+                 height: 4.55rem
+                 ;color: white;font-weight: bolder">
+        <p class="col-md-9 col-xs-9" style="margin-left:3.3rem;margin-top: 0.2rem;font-size: 0.8rem">Your order has been
+            sent to the restaurant.</p>
+    </div>
+</div>
+<div class="clearfix">
+    <div class="col-sm-offset-1 col-xs-offset-1 col-md-10 col-xs-10" style="padding-left: 0rem">
+        <h5 style="color:#969696;font-size: 0.7rem" class="text-left">$rcOrder.merchant.name</h5>
+    </div>
+    <div class="hr  col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>
+    #if($rcOrder.orderProds&&!$rcOrder.orderProds.isEmpty())
+        #foreach($orderProd in $rcOrder.orderProds)
+            <div class="media col-sm-offset-1 col-xs-offset-1 col-sm-11 col-xs-11">
+                <div class="media-left media-top">
+                    <a href="#">
+                        <img class="media-object" src="$orderProd.prodImgUrl" alt="...">
+                    </a>
+                </div>
+                <div class="media-body">
+                    <h4 class="media-heading col-sm-7 col-xs-7" style="padding-left: 0rem;text-overflow: ellipsis;overflow:hidden;white-space:nowrap; width: 6.4rem;">$orderProd.prodName</h4> <h4
+                        style="margin-top: 0rem"
+                        class="text-right col-sm-4 col-xs-4">
+                    #if($orderProd.quantity)
+                        #if($orderProd.priceManner==2)
+                            X$!viewutil.formatWgt($orderProd.quantity)
+                        #else
+                            X$!viewutil.moneyStringFormat($orderProd.quantity)
+                        #end
+                        #if ($orderProd.priceManner==2)$orderProd.measureUnit#end
+                    #else
+                        <span style="color:green;"> WGT</span>
+                    #end
+
+                </h4>
+                    <p class="media-heading col-sm-11 col-xs-11" style="font-size: 0.7rem;  padding-left: 0rem;  white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    color: #D0D0D0;    line-height: 0.7rem;width: 10rem;">
+                        #if($orderProd.orderProdSkuPropInfos&&!$orderProd.orderProdSkuPropInfos.isEmpty())
+                            #foreach($orderProdSkuPropInfo in $orderProd.orderProdSkuPropInfos)
+                                $orderProdSkuPropInfo.prodPropVal
+                                #if($velocityCount!=$orderProd.orderProdSkuPropInfos.size())
+                                    *
+                                #end
+                            #end
+                        #end
+                    </p>
+                    #if($!orderProd.prodOriginPrice)
+                        <h4 class="text-right col-sm-11 col-xs-11"
+                            style="margin-top: 0rem;padding-left: 0rem;margin-top: 0rem;color: #B5B5B5;">
+                            <del style="font-size: 0.6rem"> Rp $viewutil.moneyStringFormat2($orderProd.prodOriginPrice)
+                                #if($orderProd.priceManner==2)
+                                    /$orderProd.measureUnitCount$orderProd.measureUnit
+                                #end   </del>
+                        </h4>#end
+                    <h4 class="text-right  col-sm-11 col-xs-11" style="margin-top: 0rem;margin-bottom: 0rem">
+                        Rp   $viewutil.moneyStringFormat2($orderProd.prodPrice)
+                        #if($orderProd.priceManner==2)
+                            /$orderProd.measureUnitCount$orderProd.measureUnit
+                        #end
+
+                    </h4>
+                </div>
+            #*  <div class="media-body" >
+                  <div>
+                      <label style="width: 6.5rem;">$orderProd.prodName</label> <label style="width:3rem"
+                                                                                       class="text-right">X$orderProd.quantity</label>
+                  </div>
+                  <div>
+                      <label style="width: 6.5rem;color:#969696; font-size: 0.7rem;font-weight: normal"> #if($orderProd.orderProdSkuPropInfos&&!$orderProd.orderProdSkuPropInfos.isEmpty())
+                              #foreach($orderProdSkuPropInfo in $orderProd.orderProdSkuPropInfos)
+                          $orderProdSkuPropInfo.prodPropName
+                      #end
+                  #end
+                      </label> <label style="width:3rem" class="text-right">Rp
+                      $viewutil.moneyStringFormat2($orderProd.amount)</label>
+                  </div>
+              </div>*#
+            </div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            #if($velocityCount!=$rcOrder.orderProds.size())
+                <div class="hr  col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>
+            #end
+        #end
+    #end
+#*    <div class="media col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10">
+        <div class="media-left media-top">
+            <a href="#">
+                <img class="media-object" src="https://p3.ssl.qhimg.com/t011260d3bd48590359.jpg" alt="...">
+            </a>
+        </div>
+        <div class="media-body" style="font-size: 0.5rem">
+            <div>
+                <label style="width: 6.5rem">Patin Garang Asam</label> <label style="width:3rem"
+                                                                              class="text-right">X1</label>
+            </div>
+            <div>
+                <label style="width: 6.5rem;color:#969696;">Tast 1</label> <label style="width:3rem" class="text-right">Rp
+                45.000</label>
+            </div>
+        </div>
+    </div>*#
+#* <div class="interval col-sm-12 col-xs-12"></div>*#
+#*   <div class="col-sm-offset-1 col-xs-offset-1 col-md-10 col-xs-10" style="padding-left: 0rem">
+       <h5 style="color:#969696;font-weight: bolder;color: #FA4E70" class="text-left">Your added</h5>
+   </div>*#
+#*    <div class="hr  col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>*#
+#*   <div class="media col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10">
+       <div class="media-left media-top">
+           <a href="#">
+               <img class="media-object" src="https://p3.ssl.qhimg.com/t011260d3bd48590359.jpg" alt="...">
+           </a>
+       </div>
+       <div class="media-body">
+           <div>
+               <label style="width: 6.5rem">Patin Garang Asam</label> <label style="width:3rem"
+                                                                             class="text-right">X1</label>
+           </div>
+           <div>
+               <label style="width: 6.5rem;color:#969696;">Tast 1</label> <label style="width:3rem" class="text-right">Rp
+               45.000</label>
+           </div>
+       </div>
+   </div>*#
+    <div class="interval col-sm-12 col-xs-12"></div>
+    <div class="hr2  col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>
+</div>
+<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>
+
+
+<div class="clearfix">
+    <div class="interval col-sm-12 col-xs-12"></div>
+    #if($rcOrder.orderProds&&!$rcOrder.orderProds.isEmpty())
+        #foreach($orderProd in $rcOrder.orderProds)
+            #if($orderProd.priceManner==2)
+                <div class="col-sm-offset-1 col-xs-offset-1  col-sm-10 col-xs-10"
+                     style="background-color: #FFF7EF;color:#FF8B1D ;font-size: 0.6rem;padding: 0.4rem">The following prices
+                    are not include the WGT dishes. After the waiter weighing, please refresh
+                    this page to get the true grand total.
+                </div>
+                #break
+            #end
+        #end
+    #end
+    <div class="interval col-sm-12 col-xs-12"></div>
+    <div class="interval col-sm-12 col-xs-12"></div>
+    <form class="form-horizontal" role="form">
+        <div class="form-group" style="margin-bottom: 0rem">
+            <label style="color:#969696;" class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label">Sub
+                total:</label>
+            <div class="col-sm-5 col-xs-5">
+                <p class=" text-right" style="color:#000;">Rp $viewutil.moneyStringFormat2($rcOrder.productPrice)</p>
+            </div>
+        </div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="form-group" style="margin-bottom: 0rem">
+            <label style="color:#969696;" class="col-sm-offset-1 col-xs-offset-1 col-sm-6 col-xs-6 control-label">Service
+                Fee  $viewutil.formatPercent($rcOrder.serviceFeeRate):</label>
+            <div class="col-sm-4 col-xs-4">
+                <p class=" text-right" style="">Rp $viewutil.moneyStringFormat2($rcOrder.serviceFee)</p>
+            </div>
+        </div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="form-group" style="margin-bottom: 0rem">
+            <label style="color:#969696;"
+                   class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label">Tax  $viewutil.formatPercent($rcOrder.taxRate):</label>
+            <div class="col-sm-5 col-xs-5">
+                <p class=" text-right" style="">Rp $viewutil.moneyStringFormat2($rcOrder.tax)</p>
+            </div>
+        </div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="form-group" style="margin-bottom: 0rem" hidden>
+            <label style="color:#969696;" class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label">Rounding:</label>
+            <div class="col-sm-5 col-xs-5">
+                <p class=" text-right" style="">Rp $viewutil.moneyStringFormat2($rcOrder.rounding)</p>
+            </div>
+        </div>
+        <div class="hr col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="form-group" style="margin-bottom: 0rem">
+            <label style="color:#969696;" class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label">Grand
+                total:</label>
+            <div class="col-sm-5 col-xs-5">
+                <p class=" text-right" style="color:#FF8B1D;font-weight: bolder">
+                    Rp $viewutil.moneyStringFormat2($rcOrder.payPrice)</p>
+            </div>
+        </div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <!--  <div class="form-group" style="margin-bottom: 0rem">
+            <label style="color:#969696;" class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label">Where
+                to eat:</label>
+            <div class="col-sm-5 col-xs-5">
+                #if($rcOrder.eatType==1)
+                    <p class="text-right" style=""><span>Eat in</span></p>
+                #end
+                #if($rcOrder.eatType==2)
+                    <p class="text-right" style=""><span>Take out</span></p>
+                #end
+            </div>
+        </div> -->
+    #*  <div class="hr col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>*#
+        <div class="interval col-sm-12 col-xs-12"></div>
+    #*    <div class="form-group" style="margin-bottom: 0rem;">
+            <label class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label" style="color:#969696;">Payment
+                methed:</label>
+            <div class="col-sm-5 col-xs-5">
+                #if($rcOrder.paymentInterface==3)
+                    <p class="text-right" style="font-weight: bolder">offline</p>
+                #end
+            </div>
+        </div>*#
+    </form>
+</div>
+
+
+<div class="clearfix div-margin-top">
+    <div class="interval col-sm-12 col-xs-12"></div>
+    <div class="interval col-sm-12 col-xs-12"></div>
+    <div class="form-group">
+        <label class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label"
+               style="color:#969696">Note:</label>
+        <div class="col-sm-10 col-xs-10">
+            <p class="" style="font-size: 0.7rem;margin-left:0.6rem">$rcOrder.buyerMemo</p>
+        </div>
+    </div>
+</div>
+
+<div class="clearfix div-margin-top">
+    <div class="interval col-sm-12 col-xs-12"></div>
+    <div class="interval col-sm-12 col-xs-12"></div>
+    <form class="form-horizontal" role="form">
+        <div class="form-group" style="margin-bottom: 0rem">
+            <label style="color:#969696;" class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label">Member:</label>
+            <div class="col-sm-5 col-xs-5">
+                <p class=" text-right" style="">$rcOrder.member.name</p>
+            </div>
+        </div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="form-group" style="margin-bottom: 0rem">
+            <label style="color:#969696;"
+                   class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label">Phone:</label>
+            <div class="col-sm-5 col-xs-5">
+                <p class=" text-right" style="">$rcOrder.member.mobile</p>
+            </div>
+        </div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="hr col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="form-group" style="margin-bottom: 0rem">
+            <label style="color:#969696;" class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label">Order
+                ID:</label>
+            <div class="col-sm-5 col-xs-5">
+                <p class="text-right" style=""><span>$rcOrder.orderId</span></p>
+            </div>
+        </div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="form-group" style="margin-bottom: 0rem">
+            <label style="color:#969696;" class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label">Where
+                to eat:</label>
+            <div class="col-sm-5 col-xs-5">
+                #if($rcOrder.eatType==1)
+                    <p class="text-right" style=""><span>Eat in</span></p>
+                #end
+                #if($rcOrder.eatType==2)
+                    <p class="text-right" style=""><span>Take out</span></p>
+                #end
+            </div>
+        </div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="form-group" style="margin-bottom: 0rem;">
+            <label class="col-sm-offset-1 col-xs-offset-1 col-sm-6 col-xs-6 control-label" style="color:#969696;">Customers
+                number:</label>
+            <div class="col-sm-4 col-xs-4">
+                <p class="text-right" style="">$!rcOrder.customerCount</p>
+            </div>
+        </div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="form-group" style="margin-bottom: 0rem;">
+            <label class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label" style="color:#969696;">Order
+                Time:</label>
+            <div class="col-sm-5 col-xs-5">
+                <p class="text-right" style="">$viewutil.dateFormat($rcOrder.createTime)</p>
+            </div>
+        </div>
+    </form>
+</div>
+
+<div class="clearfix div-margin-top">
+    <div class="interval col-sm-12 col-xs-12"></div>
+    <div class="interval col-sm-12 col-xs-12"></div>
+    <div class="interval col-sm-12 col-xs-12"></div>
+    <form class="form-horizontal" role="form">
+        <div class="form-group" style="margin-bottom: 0rem">
+            <label style="color:#969696;"
+                   class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label">Review</label>
+            <div class="col-sm-5 col-xs-5">
+                #if(!$eval)
+               		<p class=" text-right" id="reviewP" style="margin-right: 1.0rem;">
+             			<span style="color: green;" id="reviewP">Unreviewed</span>
+            		</p>
+            	#else
+            		<p class=" text-right" id="reviewD" style="margin-right: 1.0rem;">
+            			<span style="#D2D2D2;" id="reviewD">${eval.score} Stars</span>
+            		</p>
+            	#end
+                <img class="ims" alt="" src="$root/static/images/food/ic_more.png">
+            </div>
+        </div>
+    </form>
+</div>
+<!-- <div class="clearfix div-margin-top">
+    <form>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="interval col-sm-12 col-xs-12"></div>
+        <div class="form-group" style="margin-bottom: 0rem" id="history">
+            <label style="color:#969696;" class="col-sm-offset-1 col-xs-offset-1 col-sm-5 col-xs-5 control-label">View
+                order history</label>
+            <div class="col-sm-5 col-xs-5">
+                <p class=" text-right" style="">
+                    <span style="color: #D2D2D2;font-weight: 900;"> ></span>
+                </p>
+            </div>
+        </div>
+    </form>
+</div> -->
+<div class="clearfix div-margin-top"></div>
+
+#*<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>
+<div class="interval col-sm-12 col-xs-12"></div>*#
+
+#*<div class="clearfix div-margin-top" style="position: fixed;bottom: 0rem;width: 100%">
+    <div class="col-sm-8 col-xs-8 text-center"
+         style="font-size:0.7rem;background-color: black;color:white;height:hei font-weight: bold;height: 2.5rem;line-height: 2.5rem;">
+        if already paid,you can
+    </div>
+    <div class="col-sm-4 col-xs-4"
+         style="font-size:0.7rem; background-color: #FF8B1D;color:white;font-weight: bold;height: 2.5rem;line-height: 2.5rem">
+        Order Again
+    </div>
+</div>*#
+
+
+<script src="$root/static/js/jquery-1.11.1.min.js"></script>
+<script src="$root/static/js/zepto.js"></script>
+<!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+<script src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+        integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+        crossorigin="anonymous"></script>
+<script type="text/javascript">
+window.addEventListener("touchmove",function(){ 
+ 	window.addEventListener("touchend",stopTouchendPropagation, true);
+ 	function stopTouchendPropagation(ev){
+        ev.stopPropagation();
+        setTimeout(function(){
+            window.removeEventListener('touchend', stopTouchendPropagation, true);
+        }, 50);
+    }
+ });
+    !function () {
+        function a() {
+            document.documentElement.style.fontSize = document.documentElement.clientWidth
+                    / 16 + "px";
+            document.getElementsByTagName("html")[0].style.height = "auto";
+        }
+
+        var b = null;
+        window.addEventListener("resize", function () {
+            clearTimeout(b), b = setTimeout(a, 1)
+        }, !1), a();
+    }(window);
+</script>
+<script type="text/javascript">
+    Zepto(function ($) {
+        $('.pinned').bind("touchend", function () {
+            alert(0)
+        });
+        //选择方式
+        $('#eatin').bind('touchend', function () {
+
+        });
+        //发送短信
+        $('#send').bind('touchend', function () {
+            $(this).prop('disabled', 'disabled');
+            $(this).css('color', '#D0D0D0');
+            var i = 60;
+            $('#send').text('Resend(' + i + 's)');
+            var timer = setInterval(function () {
+                $('#send').text('Resend(' + i-- + 's)');
+                if (i < 0) {
+                    clearInterval(timer);
+                    $('#send').text('Send');
+                    $('#send').removeProp('disabled');
+                    $('#send').css('color', '#FF8B1D');
+                }
+            }, 1000);
+        })
+        $("#history").bind('touchend', function () {
+            self.location = "history?memberId=$!{rcOrder.memberId}";
+        })
+        $("#reviewP").bind('touchend', function () {
+            var orderId = "$!rcOrder.orderId";
+            var memberId = "$!rcOrder.memberId";
+            self.location = "review?orderId=" + orderId + "&memberId=" + memberId;
+        })
+        $("#reviewD").bind('touchend', function () {
+			var orderId = "$!rcOrder.orderId";
+			self.location= "reviewdetail?orderId="+orderId;
+		})
+
+    });
+
+</script>
+</body>
+</html>

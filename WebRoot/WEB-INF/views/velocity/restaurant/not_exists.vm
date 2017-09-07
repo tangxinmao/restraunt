@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://app.toutiao.com/news_article/ -->
+<html>
+	<head>
+	#set($root=$request.getContextPath())
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+    <title>MENU</title>
+</head>
+<body data-spy="scroll" data-target="#myScrollspy">
+<div style="margin-top:30%">
+  <div style="text-align:center"><img src="$root/static/images/img_storeunavailable.png" style="width:80%"></div>
+  <div style="text-align:center">Oops, this store was unavailable.</div>
+</div>
+</body>
+</html>

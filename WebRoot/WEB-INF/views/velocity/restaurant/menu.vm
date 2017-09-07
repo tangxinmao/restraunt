@@ -1,0 +1,794 @@
+<!DOCTYPE html>
+<!-- saved from url=(0036)http://app.toutiao.com/news_article/ -->
+<html>
+	<head>
+	#set($root=$request.getContextPath())
+	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+	<link href="$root/static/css/webpage.css?v=25" rel="stylesheet"/>
+    <script src="$root/static/js/jquery-1.11.1.min.js"></script>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no" />
+	<!-- <script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>-->
+    <title>MENU</title>
+<style>	
+
+</style>
+</head>
+<body data-spy="scroll" data-target="#myScrollspy">
+<input type="hidden" id="rootsite" name="rootsite" value="$root">  
+<div class="menu navbar-example go" id="myScrollspy">
+	<ul class="nav nav-tabs nav-stacked" data-spy="affix" data-offset-top="125">
+		#if(!$hotList.isEmpty())
+			<li rel="0" class="active"><div class="fl"><img class="hot" src="$root/static/images/food/ic_hot.png"></div><a href="#0">MAKANAN HOT</a></li>
+		#end
+		#foreach($cat in $catList)
+			#if(!$cat.prods.isEmpty())
+			<li rel="$cat.prodCatId"><a href="#$cat.prodCatId">$cat.name</a></li>
+			#end
+		#end
+	</ul>
+</div>
+<div class="foodArea">
+	#if(!$hotList.isEmpty())
+		<div id="0" class="CatTit">
+			<h4>MAKANAN HOT</h4>
+		</div>
+	#end
+	<div class="details">
+		#foreach($hot in $hotList)
+		<div class="oneFood" id="p${hot.prod.prodId}">
+			<img class="fl" src="$hot.prod.prodImgUrl" onclick="showBigImage('$!{hot.prod.prodId}',this)">
+			#if($hot.prod.status == 1)
+				<img class="fl" style="position:absolute;" src="$root/static/images/food/soldout.png">
+			#end
+			<div class="textDesc">
+				<h2>$hot.prod.name</h2>
+				<h3>Sold: <span>$hot.prod.soldNum.intValue()</span></h3>
+				#if($hot.prod.originPrice)
+					#if($hot.prod.priceManner==1)
+						<h6>Rp <span>$viewutil.moneyStringFormat2($hot.prod.originPrice)</span></span></h6>
+					#else
+						<h6>Rp <span>$viewutil.moneyStringFormat2($hot.prod.originPrice)/${hot.prod.measureUnitCount}${hot.prod.measureUnit}</span></span></h6>
+					#end
+				#end
+				#if($hot.prod.priceManner==1)
+					<h4>Rp <span>$viewutil.moneyStringFormat2($hot.prod.price)</span></span></h4>
+				#else
+					<h4>Rp <span>$viewutil.moneyStringFormat2($hot.prod.price)/${hot.prod.measureUnitCount}${hot.prod.measureUnit}</span></span></h4>
+				#end
+				<h5 style="display:none">$hot.prod.ad</h5>
+			</div>
+			<div class="nums">
+				<input type="hidden" name="price" value="$hot.prod.price">
+				<input type="hidden" name="prodId" value="$hot.prod.prodId">
+				<input type="hidden" name="skuCount" value="$hot.prod.skuCount">
+				<input type="hidden" name="priceManner" value="$hot.prod.priceManner"> 
+				#if($hot.prod.status == 1)
+					<p class="soldout">SOLD OUT</p>
+				#else
+					<img class="reduce fl" alt="" src="$root/static/images/food/btn_reduce.png" style="display:none">
+					<span style="display:none">0</span>
+					<img class="add" alt="" src="$root/static/images/food/btn_add.png">
+				#end
+				<div name="skuInfos" style="display:none">
+					<ul>
+					#if(!$hot.prod.prodSkuInfos.isEmpty())
+						#foreach($prodSkuInfo in $hot.prod.prodSkuInfos)
+							<li>
+								<div class="dt" propid="$prodSkuInfo.prodPropId">$prodSkuInfo.name</div>
+								<div class="dd">
+									#foreach($enum in $prodSkuInfo.prodPropEnums)
+										<span rel="$enum.prodPropEnumId">$enum.prodPropEnum</span>
+									#end
+								</div>
+							</li>
+						#end
+					#end
+					<li></li>
+					</ul>
+				</div>
+			</div>
+		</div>
+		#end
+	#foreach($cat in $catList)
+		#if(!$cat.prods.isEmpty())
+			<div id="$cat.prodCatId" class="CatTit">
+				<h4>$cat.name</h4>
+			</div>
+			#foreach($prod in $cat.prods)
+				<div class="oneFood" id="p$prod.prodId">
+					<img class="fl" src="$prod.prodImgUrl" onclick="showBigImage('$!prod.prodId',this)">
+					#if($prod.status == 1)
+						<img class="fl" style="position:absolute;" src="$root/static/images/food/soldout.png">
+					#end
+					<div class="textDesc">
+						<h2>$prod.name</h2>
+						<h3>Sold: <span>$prod.soldNum.intValue()</span></h3>
+						#if($prod.originPrice)
+							#if($prod.priceManner==1)
+								<h6>Rp <span>$viewutil.moneyStringFormat2($prod.originPrice)</span></span></h6>
+							#else
+								<h6>Rp <span>$viewutil.moneyStringFormat2($prod.originPrice)/${prod.measureUnitCount}${prod.measureUnit}</span></span></h6>
+							#end
+						#end
+						#if($prod.priceManner==1)
+							<h4>Rp <span>$viewutil.moneyStringFormat2($prod.price)</span></span></h4>
+						#else
+							<h4>Rp <span>$viewutil.moneyStringFormat2($prod.price)/${prod.measureUnitCount}${prod.measureUnit}</span></span></h4>
+						#end
+						<h5 style="display:none">$prod.ad</h5>
+					</div>
+					<div class="nums">
+						<input type="hidden" name="price" value="$prod.price">
+						<input type="hidden" name="prodId" value="$prod.prodId">
+						<input type="hidden" name="skuCount" value="$prod.skuCount">
+						<input type="hidden" name="priceManner" value="$prod.priceManner"> 
+						#if($prod.status == 1)
+							<p class="soldout">SOLD OUT</p>
+						#else
+							<img class="reduce fl" alt="" src="$root/static/images/food/btn_reduce.png" style="display:none">
+							<span style="display:none">0</span>
+							<img class="add" alt="" src="$root/static/images/food/btn_add.png">
+						#end
+						<div name="skuInfos" style="display:none">
+							<ul>
+							#if(!$prod.prodSkuInfos.isEmpty())
+								#foreach($prodSkuInfo in $prod.prodSkuInfos)
+									<li>
+										<div class="dt" propid="$prodSkuInfo.prodPropId">$prodSkuInfo.name</div>
+										<div class="dd">
+											#foreach($enum in $prodSkuInfo.prodPropEnums)
+												<span rel="$enum.prodPropEnumId">$enum.prodPropEnum</span>
+											#end
+										</div>
+									</li>
+								#end
+							#end
+							<li></li>
+							</ul>
+						</div>
+					</div>
+				</div>
+			#end
+		#end
+	#end
+	</div>
+	
+</div>
+<div class="blank"></div>
+<div class="footer">
+	<div class="fleft">
+		<p class="popleft">Rp <span id="totalPrice">0</span> <input type="hidden" id="tprice" value="0"></p>
+	</div>
+	<form id="sub" method="post" action="$root/page/submitOrder">
+		<input type="hidden" name="json" id="json" value="">
+		<input type="hidden" name="merchantId" id="merchantId" value="$merchantId">
+		<input type="hidden" name="tableId" id="tableId" value="$!tableId">
+		<input type="hidden" name="sectionName" id="sectionName" value="$!sectionName">
+		<input type="hidden" name="tableNumber" id="tableNumber" value="$!tableNumber">
+	</form>
+	<button class="fnext" onclick="submitOrder()">Next</button>
+</div>
+<img class="orderIcon" src="$root/static/images/food/ic_orderhistory_default.png" style="display:none;">
+<img class="cartIcon" src="$root/static/images/food/ic_cart.png">
+<i class="total" style="display:none">0</i>
+<div class="shade_layout" style="display:none"></div>
+<div class="skuarea popup" style="display:none">
+	<h2>Patin Garang Asam</h2>
+	<input type="hidden" id="productID" value="">
+	<img class="ico_close" src="$root/static/images/food/ic_close.png"> 
+	<div class="content">
+		<ul>
+			<li>
+				<div class="dt">Taste</div>
+				<div class="dd">
+					<span class="selected">Taste 1</span>
+					<span>Taste 2</span>
+					<span>Taste 3</span>
+					<span>Taste 3</span>
+				</div>
+			</li>
+			<li>
+				<div class="dt">Taste</div>
+				<div class="dd">
+					<span>Taste 1</span>
+					<span class="selected">Taste 2</span>
+					<span>Taste 3</span>
+				</div>
+			</li>
+			<li></li>
+		</ul>
+	</div>
+	<div class="skufoot">
+		<p class="skusOrigin" price="" style="display:none;">Rp <span>90,000</span></p>
+		<p class="skus" price="">Rp <span>90,000</span></p>
+		<button class="skuAdd_btn">Add to Cart</button>
+	</div>
+</div>
+<div class="cartarea cart_area_show popup" style="display:none">
+	<div class="cart_tit">
+		<h2>Selected Food</h2>
+		<img class="delete" src="$root/static/images/food/ic_delete.png">
+		<p class="deleteP">Delete all</p>
+	</div>
+	<div class="cart_content">
+	</div>
+</div>
+<div class="detailarea popup" style="display:none">
+	<img class="ico_close" src="$root/static/images/food/ic_close.png"> 
+	<img class="bingimg" src="$root/static/images/food/1.png">
+	<h1>Dori Bumbu Lychee</h1>
+	<p class="adword">The area is introduct product detail, so you can write here.</p>
+	<h2>Rp <span>45.000</span></h2>
+	<input type="hidden" id="dProdId" value="">
+	<button class="addTo">Add to cart</button>
+</div>
+<div class="confirm popup" style="display:none">
+	<p>Are your sure to clear your cart?</p>
+	<div class="btn">
+		<div class="OK">
+			<button>OK</button>
+		</div>
+		<div class="Cancel">
+			<button>Cancel</button>
+		</div>
+	</div>
+	
+</div>
+<script type="text/javascript">
+!function(){function a(){document.documentElement.style.fontSize=document.documentElement.clientWidth/16+"px"; document.getElementsByTagName("html")[0].style.height="auto";}var b=null; window.addEventListener("resize",function(){clearTimeout(b),b=setTimeout(a,1)},!1),a();}(window);
+</script>
+<script type="text/javascript">
+ window.addEventListener("touchmove",function(){ 
+ 	window.addEventListener("touchend",stopTouchendPropagation, true);
+ 	function stopTouchendPropagation(ev){
+        ev.stopPropagation();
+        setTimeout(function(){
+            window.removeEventListener('touchend', stopTouchendPropagation, true);
+        }, 50);
+    }
+ });
+window.alert = function(name){
+	var iframe = document.createElement("IFRAME");
+	iframe.style.display="none";
+	iframe.setAttribute("src", 'data:text/plain,');
+	document.documentElement.appendChild(iframe);
+	window.frames[0].window.alert(name);
+	iframe.parentNode.removeChild(iframe);
+}
+//window.confirm = function(name){
+//	var iframe = document.createElement("IFRAME");
+//	iframe.style.display="none";
+//	iframe.setAttribute("src", 'data:text/plain,');
+//	document.documentElement.appendChild(iframe);
+///	window.frames[0].window.confirm(name);
+//	iframe.parentNode.removeChild(iframe);
+//}
+ $(function(){
+
+ 	 
+ 
+	 $('.menu').find("ul li").click(function(){
+		var root = $("#rootsite").val();
+		$('.menu ul li').each(function(){
+			if($(this).hasClass("active")){
+				$(this).removeClass("active");
+			}
+		});
+		$(this).addClass("active");
+		var val = $(this).attr("rel");
+		var merchantId = $("#merchantId").val();
+		//$('html,body').animate({scrollTop:$('#'+val).offset().top}, 400);
+		if(val=="0"){
+			
+		}
+		else{
+			//$.post(root+"/page/searchByCat", {"merchantId":merchantId,"prodCatId":val},
+			//	function(data){
+			//	var jsonObjArr = JSON.parse(data);
+			//	var html = '<div class="CatTit"><h4>MANKANAN HOT</h4></div><div class="details">';
+			//	for(var i in jsonObjArr){
+			//		  html += '<div class="oneFood">'
+			//			   +'<img class="fl" src="'+jsonObjArr[i].prodImgUrl+'">'
+			//			   +'<div class="textDesc">'
+			//			   +'<h2>'+jsonObjArr[i].name+'</h2>'
+			//			   +'<h3>Sold: <span>'+jsonObjArr[i].soldNum+'</span></h3>'
+			//			   +'<h4>Rp <span>'+jsonObjArr[i].price+'</span></h4></div>'
+			//			   +'<div class="nums">'
+			//			   +'<input type="hidden" name="price" value="'+jsonObjArr[i].price+'">'
+			//			   +'<img class="reduce fl" alt="" src="/restaurant/static/images/food/btn_reduce.png" style="display:none">'
+			//			   +'<span style="display:none">0</span>'
+			//			   +'<img class="add" alt="" src="/restaurant/static/images/food/btn_add.png"></div></div>';
+			//	}
+			//	html += "</div>";
+			//	$(".foodArea").html(html);
+			//});
+		}
+	 });
+	 $(document).delegate(".nums .add","touchend",function(){ 
+    // $('.nums .add').on('touchend',function(){
+    	 var skuCount = parseInt($(this).parent().find("input[name='skuCount']").val());
+    	 var priceManner = $(this).parent().find("input[name='priceManner']").val();
+    	 var num = parseInt($(this).parent().find("span").text())+1;
+    	 if(skuCount>0){ 
+    		 if(priceManner == "2" && num>1){
+    				return;
+    		 }
+    		 var html = $(this).parent().find("div[name='skuInfos']").html();
+    		 var price = $(this).parent().find("input[name='price']").val();
+    		 $(".skus span").text(format_number(price));
+    		 $(".skus").attr("price",price);
+    		 $(".content").html(html);
+    		 var prodName = $(this).parent().parent().find("div[class='textDesc'] h2").text();
+    		 $("#productID").val($(this).parent().find("input[name='prodId']").val());
+    		 $(".skuarea h2").text(prodName);
+    		 $(".shade_layout").show();
+    		 $(".skuarea").show();
+    		 return 0;
+    	 }
+		 if(priceManner == "2" && num>1){
+			return;
+		 }
+		 var cart = parseInt($(".total").text()) + 1;
+		 var prodPrice = $(this).parent().find("input[name='price']").val();
+		 var totalPrice = parseInt($("#tprice").val()) + parseInt(prodPrice);
+		 var prodId = $(this).parent().find("input[name='prodId']").val();
+		 var prodName = $(this).parent().parent().find("div[class='textDesc'] h2").text();
+		 //$(this).parent().find("span").text(num); 
+		 var $prodDiv = $(".foodArea").find("div[id='p"+prodId+"']");
+		 for(var i in $prodDiv){
+			 $prodDiv.eq(i).find("div[class='nums']").find("span").eq(0).text(num);
+			 if(num==1){
+				  $prodDiv.eq(i).find("div[class='nums']").find("img").eq(0).show();
+				  $prodDiv.eq(i).find("div[class='nums']").find("span").eq(0).show();
+		   	 }
+		 }
+		 
+		 if(cart==1){
+			 $(".total").show();
+		 }
+		 $(".total").text(cart);
+		 $("#totalPrice").text(format_number(totalPrice));
+		 $("#tprice").val(totalPrice);
+		 var cartItem = localStorage.getItem("cart");
+		 var totalItem = localStorage.getItem("num");
+		 var totalNum = 1;
+		 if(cartItem==null){
+			 cartItem = [{"prodId":prodId,"prodNum":num,"prodName":prodName,"price":prodPrice}]
+			 totalItem = [{"prodId":prodId,"totalNum":1}];
+		 }
+		 else{
+		 	cartJson = JSON.parse(cartItem);
+		 	totalJson = JSON.parse(totalItem);
+		 	var flag = false;
+		 	for(var i in cartJson){
+		 		if(cartJson[i].prodId==prodId){
+		 			cartJson[i].prodNum++;
+		 			flag = true;
+		 		}
+		 	}
+		 	if(!flag){	
+		 		addData = {"prodId":prodId,"prodNum":num,"prodName":prodName,"price":prodPrice};
+		 		if(cartJson!=null){
+		 			cartJson.push(addData);
+		 		}
+		 		else{
+		 			cartJson = JSON.parse(addData);
+		 		}
+		 	}
+		 	cartItem = cartJson;
+		 	var flag = false;
+		 	for(var i in totalJson){
+		 		if(totalJson[i].prodId==prodId){
+		 			totalJson[i].totalNum++;
+		 			flag = true;
+		 		}
+		 	}
+		 	if(!flag){	
+		 		addTotalData = {"prodId":prodId,"totalNum":1};
+		 		totalJson.push(addTotalData);
+		 	}
+		 	totalItem = totalJson;
+		 }
+		 localStorage.setItem("cart", JSON.stringify(cartItem));
+		 localStorage.setItem("num", JSON.stringify(totalItem));
+     });
+     $(document).delegate(".nums .reduce","touchend",function(){ 
+     //$('.nums .reduce').on('touchend',function(){
+   	  var num = parseInt($(this).parent().find("span").eq(0).text())-1;
+   	  var cart = parseInt($(".total").text()) - 1;
+   	 // var totalPrice = parseInt($("#tprice").val()) - parseInt($(this).parent().find("input[name='price']").val());
+   	 // $(this).parent().find("span").text(num); 
+   	  
+   	  var prodId = $(this).parent().find("input[name='prodId']").val();
+   	  var $prodDiv = $(".foodArea").find("div[id='p"+prodId+"']");
+	  for(var i in $prodDiv){
+		 $prodDiv.eq(i).find("div[class='nums']").find("span").eq(0).text(num);
+		 if(num==0){
+			  $prodDiv.eq(i).find("div[class='nums']").find("img").eq(0).hide();
+			  $prodDiv.eq(i).find("div[class='nums']").find("span").eq(0).hide();
+	  	  }
+	   	  if(cart==0){
+	   		$(".total").hide();
+	   	  }
+	  }
+   	  var cartJson = JSON.parse(localStorage.getItem("cart"));
+   	  var totalJson = JSON.parse(localStorage.getItem("num"));
+   	  for(var i in cartJson){
+ 		if(cartJson[i].prodId==prodId){
+ 			if(cartJson[i].prodNum>1){
+	 			cartJson[i].prodNum--;
+	 			flag = true;
+	 			break;
+ 			}
+ 			else if(cartJson[i].prodNum==1){
+ 				cartJson.splice(i,1);
+ 				break;
+ 			}
+ 		}
+ 	  }
+   	 for(var i in totalJson){
+  		if(totalJson[i].prodId==prodId){
+  			if(totalJson[i].totalNum>1){
+ 	 			totalJson[i].totalNum--;
+ 	 			flag = true;
+ 	 			break;
+  			}
+  			else if(totalJson[i].totalNum==1){
+  				totalJson.splice(i,1);
+  				break;
+  			}
+  		}
+  	  }
+   	 var totalPrice = 0;
+   	 for(var i in cartJson){
+   		totalPrice += cartJson[i].price*cartJson[i].prodNum;
+   	 }
+   	 localStorage.setItem("cart", JSON.stringify(cartJson));
+   	 localStorage.setItem("num", JSON.stringify(totalJson));
+   	  $(".total").text(cart);
+   	  $("#totalPrice").text(format_number(totalPrice));
+	  $("#tprice").val(totalPrice);
+     });
+     
+     $('.ico_close').on('touchend',function(){
+     	$(".shade_layout").hide();
+     	$(".popup").hide();
+     });
+     
+    $(".shade_layout").on('touchend',function(event){
+		if($(".cartarea").hasClass("cart_area_show")){
+			$(".popup").hide().removeClass('cart_area_show');
+			$(".shade_layout").hide();
+			$("body").removeClass("scorll");
+			$(".shade_layout").css("z-index","9998");
+		}
+    });
+   
+   	$('.skuAdd_btn').on('touchend',function(){
+    	 var i = 0;
+    	 var j = 1;
+    	 var skuinfos = "";
+    	 var ids = "";
+    	 var infoJson = [];
+    	 $(".content ul li").each(function(){
+    		
+    	    var i = 0;
+    	 	$(this).find("div[class='dd']").find("span").each(function(){
+    	 		if($(this).hasClass("selected")){
+    	 			i = 1;
+    	 			if(skuinfos==""){
+    	 				skuinfos = $(this).text();
+    	 			}
+    	 			else{
+    	 				skuinfos = skuinfos + "*" + $(this).text();
+    	 			}
+    	 			var prodPropId = $(this).parent().parent().find("div").eq(0).attr("propid");
+    	 			var prodPropEnumId = $(this).attr("rel");
+    	 			infoJson.push({"prodPropId":prodPropId,"prodPropEnumId":prodPropEnumId});
+    	 		}
+    	 	})
+    	 	if(i==0 && $(this).html()!=""){
+    	          alert("Please select SKU property!");
+    	          return false;
+    	    }
+    	 	j++;
+    	 })
+    	 var prodId = $("#productID").val();
+    	 var json = {"prodId":prodId,"prodSkuPropInfo":infoJson};
+    	 $.post("skuinfo",{"data":JSON.stringify(json)},function(json){
+    		 var jsonObjArr = JSON.parse(json);
+    		 var prodSkuId = jsonObjArr.prodSkuId;
+    		 //alert(JSON.stringify(json));
+        	 var cart = parseInt($(".total").text()) + 1;
+    		 var prodPrice = parseInt(jsonObjArr.price);
+    		 $(".skus").attr("price",prodPrice)
+    		 $(".skus span").text(prodPrice);
+        	 var totalPrice = parseInt($("#tprice").val()) + prodPrice; 
+    		 $(".total").show();
+    		 $(".total").text(cart);
+    		 $("#totalPrice").text(format_number(totalPrice));
+    		 $("#tprice").val(totalPrice);
+    		 var prodId = $("#productID").val();
+    		 var prodName = $(".skuarea h2").text();
+    		 var $prodDiv = $(".foodArea").find("div[id='p"+prodId+"']");
+    		 var num = parseInt($prodDiv.eq(0).find("div[class='nums']").find("span").eq(0).text()) + 1;
+    		 for(var i in $prodDiv){
+    			 $prodDiv.eq(i).find("div[class='nums']").find("span").eq(0).text(num);
+    			 if(num==1){
+    				  $prodDiv.eq(i).find("div[class='nums']").find("img").eq(0).show();
+    				  $prodDiv.eq(i).find("div[class='nums']").find("span").eq(0).show();
+    		   	 }
+    		 }
+    		 var cartItem = localStorage.getItem("cart");
+    		 var totalItem = localStorage.getItem("num");
+    		 if(cartItem==null){
+    			 cartItem = [{"prodId":prodId,"prodNum":num,"prodName":prodName,"price":prodPrice,"skuinfos":skuinfos,"prodSkuId":prodSkuId}]
+    			 totalItem = [{"prodId":prodId,"totalNum":1}];
+    		 }
+    		 else{
+    		 	cartJson = JSON.parse(cartItem);
+    		 	totalJson = JSON.parse(totalItem);
+    		 	var flag = false;
+    		 	for(var i in cartJson){
+    		 		if(cartJson[i].prodId==prodId && cartJson[i].prodSkuId == prodSkuId){
+    		 			cartJson[i].prodNum++;
+    		 			flag = true;
+    		 		}
+    		 	}
+    		 	if(!flag){	
+    		 		addData = {"prodId":prodId,"prodNum":1,"prodName":prodName,"price":prodPrice,"skuinfos":skuinfos,"prodSkuId":prodSkuId};
+    		 		cartJson.push(addData);
+    		 	}
+    		 	cartItem = cartJson;
+    		 	totalJson = JSON.parse(totalItem);
+    		 	
+    		 	var flag = false;
+    		 	for(var i in totalJson){
+    		 		if(totalJson[i].prodId==prodId){
+    		 			totalJson[i].totalNum++;
+    		 			flag = true;
+    		 		}
+    		 	}
+    		 	if(!flag){	
+    		 		addTotalData = {"prodId":prodId,"totalNum":1};
+    		 		totalJson.push(addTotalData);
+    		 	}
+    		 	totalItem = totalJson;
+    		 }
+    		 localStorage.setItem("cart", JSON.stringify(cartItem));
+    		 localStorage.setItem("num", JSON.stringify(totalItem));
+    		 close();
+    	 });
+    	
+     });
+     $(document).delegate(".content ul li div[class='dd'] span","touchend",function(){
+     	$(this).parent().find("span").each(function(){
+     		if($(this).hasClass("selected")){
+     			$(this).removeClass("selected");
+     		}
+     	})
+     	$(this).addClass("selected");
+     	var flag = true;
+     	var $obj = $(this).parent().parent().parent().find("li");
+     	for(var i=0; i<$obj.length-1;i++){
+     		if($obj.eq(i).find("span[class='selected']").length==0){
+     			flag = false;
+     		}
+     	}
+     	if(flag){
+     		var prodId = $("#productID").val();
+        	var infoJson = [];
+        	$(".content ul li").find("div[class='dd']").find("span").each(function(){
+    	 		if($(this).hasClass("selected")){
+    	 			var prodPropId = $(this).parent().parent().find("div").eq(0).attr("propid");
+    	 			var prodPropEnumId = $(this).attr("rel");
+    	 			infoJson.push({"prodPropId":prodPropId,"prodPropEnumId":prodPropEnumId});
+    	 		}
+    	 	})
+    	 	var json = {"prodId":prodId,"prodSkuPropInfo":infoJson};
+     		$.post("skuinfo",{"data":JSON.stringify(json)},function(json){
+     			 var jsonObjArr = JSON.parse(json);
+     			 $(".skus span").text(format_number(jsonObjArr.price));
+     			 $(".skus span").text(format_number(jsonObjArr.price));
+     			 $(".skus").attr("price",jsonObjArr.price);
+     		});
+     	}
+     });
+     $('.delete').on('touchend',function(){
+    	/*  if(confirm("Are your sure to clear your cart?")){
+    	 	localStorage.clear();
+    	 	$(".cart_content").html("");
+    	 	$(".total").text("0");
+    	 	$(".total").hide();
+    	 	$("#totalPrice").text("0");
+    	 	$("#tprice").val("0");
+    	 	$(".nums").each(function(){
+    	 		$(this).find("img").eq(0).hide();
+    	 		$(this).find("span").eq(0).text("0");
+    	 		$(this).find("span").eq(0).hide();
+    	 	})
+    	 } */
+    	 $(".confirm").show();
+    	 $(".shade_layout").show();
+    	 $(".shade_layout").css("z-index","99998");
+     });
+     $('.deleteP').on('touchend',function(){
+    	 $(".confirm").show();
+    	 $(".shade_layout").show();
+    	 $(".shade_layout").css("z-index","99998");
+     });
+     $('.fnext').on('touchend',function(){
+       
+     });
+     $(".addTo").on('touchend',function(){
+    	 var prodId = $("#dProdId").val();
+    	 var $obj = $(".foodArea").find("div[id='p"+prodId+"']").eq(0).find(".nums").find("img").eq(1);
+    	 var skuCount = parseInt($obj.parent().find("input[name='skuCount']").val());
+    	 var priceManner = $obj.parent().find("input[name='priceManner']").val();
+    	 var num = parseInt($obj.parent().find("span").text())+1;
+    	 if(skuCount>0){ 
+			 close();	    		 
+    		 if(priceManner == "2" && num>1){
+    				return;
+    		 }
+    		 var html = $obj.parent().find("div[name='skuInfos']").html();
+    		 var price = $obj.parent().find("input[name='price']").val();
+    		 $(".skus span").text(format_number(price));
+    		 $(".skus").attr("price",price);
+    		 $(".content").html(html);
+    		 var prodName = $obj.parent().parent().find("div[class='textDesc'] h2").text();
+    		 $("#productID").val($obj.parent().find("input[name='prodId']").val());
+    		 $(".skuarea h2").text(prodName);
+    		 $(".shade_layout").show();
+    		 $(".skuarea").show();
+    		 return 0;
+    	 }
+		 if(priceManner == "2" && num>1){
+			return;
+		 }
+		 var cart = parseInt($(".total").text()) + 1;
+		 var prodPrice = $obj.parent().find("input[name='price']").val();
+		 var totalPrice = parseInt($("#tprice").val()) + parseInt(prodPrice);
+		 var prodId = $obj.parent().find("input[name='prodId']").val();
+		 var prodName = $obj.parent().parent().find("div[class='textDesc'] h2").text();
+		 //$(this).parent().find("span").text(num); 
+		 var $prodDiv = $(".foodArea").find("div[id='p"+prodId+"']");
+		 for(var i in $prodDiv){
+			 $prodDiv.eq(i).find("div[class='nums']").find("span").eq(0).text(num);
+			 if(num==1){
+				  $prodDiv.eq(i).find("div[class='nums']").find("img").eq(0).show();
+				  $prodDiv.eq(i).find("div[class='nums']").find("span").eq(0).show();
+		   	 }
+		 }
+		 
+		 if(cart==1){
+			 $(".total").show();
+		 }
+		 $(".total").text(cart);
+		 $("#totalPrice").text(format_number(totalPrice));
+		 $("#tprice").val(totalPrice);
+		 var cartItem = localStorage.getItem("cart");
+		 var totalItem = localStorage.getItem("num");
+		 var totalNum = 1;
+		 if(cartItem==null){
+			 cartItem = [{"prodId":prodId,"prodNum":num,"prodName":prodName,"price":prodPrice}]
+			 totalItem = [{"prodId":prodId,"totalNum":1}];
+		 }
+		 else{
+		 	cartJson = JSON.parse(cartItem);
+		 	totalJson = JSON.parse(totalItem);
+		 	var flag = false;
+		 	for(var i in cartJson){
+		 		if(cartJson[i].prodId==prodId){
+		 			cartJson[i].prodNum++;
+		 			flag = true;
+		 		}
+		 	}
+		 	if(!flag){	
+		 		addData = {"prodId":prodId,"prodNum":num,"prodName":prodName,"price":prodPrice};
+		 		cartJson.push(addData);
+		 	}
+		 	cartItem = cartJson;
+		 	var flag = false;
+		 	for(var i in totalJson){
+		 		if(totalJson[i].prodId==prodId){
+		 			totalJson[i].totalNum++;
+		 			flag = true;
+		 		}
+		 	}
+		 	if(!flag){	
+		 		addTotalData = {"prodId":prodId,"totalNum":1};
+		 		totalJson.push(addTotalData);
+		 	}
+		 	totalItem = totalJson;
+		 }
+		 localStorage.setItem("cart", JSON.stringify(cartItem));
+		 localStorage.setItem("num", JSON.stringify(totalItem));
+		 close();
+     });
+     
+     $('.Cancel button').on('touchend',function(){
+ 	 	 $(".confirm").hide();
+         $(".shade_layout").css("z-index","9998");
+     });
+     $('.OK button').on('touchend',function(){
+         localStorage.removeItem("cart");
+ 	 	 localStorage.removeItem("num");
+ 	 	 $(".cart_content").html("");
+ 	 	 $(".total").text("0");
+ 	 	 $(".total").hide();
+ 	 	 $("#totalPrice").text("0");
+ 	 	 $("#tprice").val("0");
+ 	 	 $(".nums").each(function(){
+ 	 		$(this).find("img").eq(0).hide();
+ 	 		$(this).find("span").eq(0).text("0");
+ 	 		$(this).find("span").eq(0).hide();
+ 	 	 })
+ 	 	 $(".confirm").hide();
+         $(".shade_layout").css("z-index","9998");
+     });
+  });
+ function format_number(n){
+   var b=parseInt(n).toString();
+   var len=b.length;
+   if(len<=3){return b;}
+   var r=len%3;
+   return r>0?b.slice(0,r)+"."+b.slice(r,len).match(/\d{3}/g).join("."):b.slice(r,len).match(/\d{3}/g).join(".");
+ }
+ function close(){
+	 $(".shade_layout").hide();
+	 $(".popup").hide();
+ }
+ function submitOrder(){
+	 var json = [];
+ 	//$(".cart_content").find("div[class='cart_one']").each(function(){
+		//	var prodId = $(this).find("input[name='prodId']").val();
+		//	var prodSkuId =  $(this).find("input[name='prodSkuId']").val();
+		//	var quantity = parseInt($(this).find("div[class='cnums'] span").text());
+		//	var json_one = {"prodId":prodId,"prodSkuId":prodSkuId,"quantity":quantity};
+		//	json.push(json_one);
+     //});
+ 	var cartJson = JSON.parse(localStorage.getItem("cart"));
+ 	for(var i in cartJson){
+ 		var prodId = cartJson[i].prodId;
+			var prodSkuId =  cartJson[i].prodSkuId;
+			if(prodSkuId==null){
+				prodSkuId = "";
+			}
+			var quantity = cartJson[i].prodNum;
+			var json_one = {"prodId":prodId,"prodSkuId":prodSkuId,"quantity":quantity};
+			json.push(json_one);
+ 	}
+ 	if(json.length==0){
+ 		alert("Please select food first.");
+ 		return 0;
+ 	}
+ 	$("#json").val(JSON.stringify(json));
+ 	$("#sub").submit();
+ }
+ function showBigImage(prodId,obj){
+	 $(".shade_layout").show();
+	 $(".detailarea").show();
+	 $(".bingimg").attr("src",$(obj).attr("src"));
+	 var prodName = $(obj).parent().find("div[class='textDesc'] h2").text();
+	 $(".detailarea h1").text(prodName);
+	 var adword = $(obj).parent().find("div[class='textDesc'] h5").text();
+	 $(".adword").text(adword);
+	 var price = $(obj).parent().find("div[class='textDesc'] h4").html();
+	 $(".detailarea h2").html(price);
+	 $("#dProdId").val(prodId);
+ }
+ //获取url中的参数
+ function getUrlParam(name) {
+     var reg = new RegExp("(^|&)" + name + "=([^&]*)(&|$)"); //构造一个含有目标参数的正则表达式对象
+     var r = window.location.search.substr(1).match(reg);  //匹配目标参数
+     if (r != null) return unescape(r[2]); return null; //返回参数值
+ }
+</script>
+<script type="text/javascript" src="$root/static/js/zepto.js"></script>
+<script type="text/javascript" src="$root/static/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="$root/static/js/menuPage.js?v=8"></script>
+</body>
+</html>

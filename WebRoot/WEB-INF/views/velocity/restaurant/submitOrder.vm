@@ -1,0 +1,927 @@
+<! DOCTYPE html>
+<!-- saved from url=(0036)http://app.toutiao.com/news_article/ -->
+<html>
+<head>
+    #set($root=$request.getContextPath())
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="user-scalable=no"/>
+    <title>SUBMIT ORDER</title>
+
+
+    <script src="$root/static/js/jquery-1.11.1.min.js"></script>
+    <script src="$root/static/js/jquery.cookie.js"></script>
+
+    <script src="$root/static/js/jquery.form.min.js"></script>
+    <script src="$root/static/js/jquery.validate.min.js"></script>
+    <script src="$root/static/js/additional-methods.min.js"></script>
+    <!--  <script>$.noConflict();</script> -->
+    <script src="$root/static/js/zepto.js"></script>
+    <!--  <script src="$root/static/js/jquery.mobile-1.4.5.min.js"></script>  -->
+    <!--  <link href="$root/static/css/stickup.css" rel="stylesheet">
+ <script src="$root/static/js/stickUp.js"></script>   -
+ ->
+ <script src="$root/static/js/jquery.pin.js"></script>
+
+<!-- 最新版本的 Bootstrap 核心 CSS 文件 -->
+    <link rel="stylesheet"
+          href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap.min.css"
+          integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u"
+          crossorigin="anonymous">
+    <!-- 可选的 Bootstrap 主题文件（一般不用引入） -->
+    <link rel="stylesheet"
+          href="https://cdn.bootcss.com/bootstrap/3.3.7/css/bootstrap-theme.min.css"
+          integrity="sha384-rHyoN1iRsVXV4nD0JutlnGaslCJuC7uwjduW9SVrLvRYooPp2bWYgmgJQIXwl/Sp"
+          crossorigin="anonymous">
+    <!-- 最新的 Bootstrap 核心 JavaScript 文件 -->
+    <script
+            src="https://cdn.bootcss.com/bootstrap/3.3.7/js/bootstrap.min.js"
+            integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa"
+            crossorigin="anonymous"></script>
+
+
+    <style type="text/css">
+        .shade_layout {
+            position: fixed;
+            _position: absolute;
+            padding: 0;
+            margin: 0;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 9998;
+            background-color: #000;
+            overflow: hidden;
+            zoom: 1;
+            opacity: 0.4;
+        }
+
+        .skuarea {
+            position: fixed;
+            _position: absolute;
+            padding: 0;
+            margin: 0;
+            width: 13.1rem;
+            top: 15%;
+            left: 9%;
+            z-index: 9999;
+            background-color: #fff;
+            overflow: hidden;
+            zoom: 1;
+            border-radius: 0.3rem;
+        }
+
+        .userinfo {
+            position: fixed;
+            _position: absolute;
+            padding: 0;
+            margin: 0;
+            width: 13.1rem;
+            top: 15%;
+            left: 9%;
+            z-index: 9999;
+            background-color: #fff;
+            overflow: hidden;
+            zoom: 1;
+            border-radius: 0.3rem;
+        }
+
+        body {
+            background-color: #F3F3F5;
+        }
+
+        .form-control {
+            border-width: 0rem;
+            height: 1.5rem;
+        }
+
+        .form-group {
+            margin-left: 0rem !important;
+            margin-right: 0rem !important;
+        }
+
+        .form-control-static {
+            color: black;
+            margin-top: 0rem;
+            font-weight: bold;
+
+        }
+
+        .control-label {
+            font-size: 0.7rem;
+            font-weight: normal;
+        }
+
+        .control-label-static {
+            color: #969696;
+            font-weight: normal;
+            text-align: left !important;
+
+        }
+
+        div {
+            background-color: white;
+        }
+
+        .glyphicon {
+            color: #969696;
+
+        }
+
+        .alert {
+            color: #FF8B1D;
+            font-size: 0.5rem;
+            height: 1.5rem;
+            line-height: 1rem;
+        }
+
+        .input-group-btn .btn {
+            border-width: 0rem;
+            background-color: white;
+            color: #FF8B1D;
+            font-size: 0.5rem;
+            width: 5rem;
+            height: 1rem;
+            font-weight: bold;
+        }
+
+        .hr {
+            height: 0.01rem;
+            background-color: #D2D2D2;
+        }
+
+        .hr-h1 {
+            margin-top: 0.7rem;
+            background-color: #969696;
+        }
+
+        h1 {
+            font-weight: bold;
+        }
+
+        .interval {
+            margin-top: 0.2rem;
+        }
+
+        .glyphicon-phone {
+            margin-top: 0.3rem;
+        }
+
+        h4 {
+            font-size: 0.7rem;
+            font-weight: normal;
+        }
+
+        .media-object {
+            width: 3rem;
+            height: 3rem;
+        }
+
+        p {
+            color: #969696;
+            font-size: 0.4rem;
+
+        }
+
+        .div-margin-top {
+            margin-top: 0.3rem;
+        }
+
+        .hr2 {
+            border-width: 0.01rem;
+            border-color: #D2D2D2;
+            border-style: solid;
+            border-left-width: 0;
+            border-right-width: 0;
+            height: 0.12rem;
+
+        }
+
+        textarea {
+            height: 3rem !important;
+
+        }
+
+        .fade.in {
+            opacity: 0.4 !important;
+            background-color: black;
+        }
+
+        .form-group div p {
+            font-size: 0.7rem;
+            font-weight: normal;
+        }
+        .ims{
+        	position: absolute;
+		    width: 0.35rem;
+		    top: 0.36rem;
+		    right: 0.4rem;
+        }
+    </style>
+</head>
+<body>
+<div class="shade_layout"></div>
+<div class="skuarea popup" style="display:none;background-color: transparent">
+    <h4 class="text-center" style="color:white"
+        style="font-size: 1.5rem">
+        Now please select where to eat?</h4>
+    <button type="button" class="btn btn-default" data-dismiss="modal" style="
+            margin-top:1rem;
+            background-repeat:no-repeat;background-position:3.5rem 0.5rem; width:13rem;height:2rem;font-size:0.6rem;font-weight: bolder;
+            background-image: url($root/static/images/food/ic_eatin_selected.png);
+            color:#FF8B1D;background-size:1rem 1rem ; border-radius: 0.3rem;"
+            id="eatIn">
+        Eat in
+    </button>
+
+    <button type="submit" class="btn btn-default" data-dismiss="modal" style="
+            height:2rem;font-size:0.6rem;margin-top:1rem;font-weight: bolder;    border-radius: 0.3rem;
+            background-repeat:no-repeat;background-position:3.5rem 0.5rem; width:13rem;
+            background-image: url($root/static/images/food/ic_tackout_default.png);color:black;background-size:1rem 1rem"
+            id="takeOut">
+        Take Out
+    </button>
+</div>
+<form id="submitOrderForm" method="post" action="$root/page/order">
+    <fieldset>
+    #*userinfo*#
+        <div class="userinfo popup" style="display:none">
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <h4 class="text-center" style="color:#FF8B1D"
+                style="font-size: 1.5rem">
+                Please input your name and phone.</h4>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <form class="form-horizontal">
+                <div class="form-group">
+                    <label for="inputEmail3" class="control-label col-sm-2 col-xs-2 text-right"
+                           style="padding-top: 0.7rem;"><span
+                            class="glyphicon glyphicon-user"></span></label>
+                    <div class="input-group col-sm-9 col-xs-9">
+                        <input type="text" class="form-control input-lg srf" maxlength="18" id="inputEmail3"
+                               placeholder="Name"
+                               name="member.name" #*onkeydown="checkNotSpecial(event)" *#  onkeyup="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.]/g,'')" onafterpaste="value=value.replace(/[^\a-\z\A-\Z0-9\u4E00-\u9FA5\.]/g,'')"
+                               style="font-size: 0.7rem;height: 2rem;border-width: 0.05rem;border-radius: 0.25rem">
+                    </div>
+                    <div class="interval col-sm-12 col-xs-12"></div>
+                #*         <div class="hr col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>*#
+                    <div class="interval col-sm-12 col-xs-12"></div>
+                </div>
+                <div class="form-group">
+                    <label for="inputEmail3" class="control-label col-sm-2 col-xs-2 text-right"
+                           style="padding-top: 0.5rem">+62</label>
+                    <div class="input-group col-sm-9 col-xs-9">
+                        <input type="text" class="form-control input-lg srf" maxlength="15" id="inputEmail3"
+                               placeholder="Phone Number"
+                               name="member.mobile"
+                               style="font-size: 0.7rem;height: 2rem;border-width: 0.05rem;border-radius: 0.25rem" onkeydown="checkNotNumber(event)"  onkeyup="this.value=this.value.replace(/\D/g,'')" onafterpaste="this.value=this.value.replace(/\D/g,'')">
+                    </div>
+                    <div class="interval col-sm-12 col-xs-12"></div>
+                    <div class="interval col-sm-12 col-xs-12"></div>
+                #*          <div class="hr col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>*#
+                </div>
+            </form>
+            <button type="submit" class="btn col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10" style="
+                   font-size:0.7rem;font-weight: normal;
+                    background-color: #FF8B1D;height: 1.8rem;
+                    color:#fff;border-radius: 0.3rem;"
+                    id="eatIn">
+                Submit
+            </button>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+        </div>
+
+
+        <input type="hidden" name="tableId" value="$!rcOrder.tableId">
+        <input type="hidden" name="sectionName" value="$!rcOrder.sectionName">
+        <input type="hidden" name="tableNumber" value="$!rcOrder.tableNumber">
+        <input type="hidden" name="merchantId" value="$!rcOrder.merchantId">
+        <input type="hidden" id="contextPath" name="contextPath" value="$root">
+        <input type="hidden" id="orderToken" name="orderToken" value="$orderToken">
+        <div class="clearfix">
+        #*  <div class="alert alert-warning text-center" role="alert" style="font-size: 0.7rem;height: 2rem;line-height: 1.5rem">Please verify your phone and check the order.
+          </div>*#
+            <form class="form-horizontal">
+            #*  <div class="form-group">
+                  <label for="inputEmail3" class="control-label col-sm-2 col-xs-2 text-right"
+                         style="padding-top: 0.7rem;"><span
+                          class="glyphicon glyphicon-user"></span></label>
+                  <div class="input-group col-sm-9 col-xs-9">
+                      <input type="text" class="form-control input-lg srf" maxlength="16" id="inputEmail3"
+                             placeholder="Input your name"
+                             name="member.name"
+                             style="font-size: 0.7rem;height: 2rem">
+                  </div>
+                  <div class="interval col-sm-12 col-xs-12"></div>
+                  <div class="hr col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>
+                  <div class="interval col-sm-12 col-xs-12"></div>
+              </div>
+              <div class="form-group">
+                  <label for="inputEmail3" class="control-label col-sm-2 col-xs-2 text-right"
+                         style="padding-top: 0.5rem">+62</label>
+                  <div class="input-group col-sm-9 col-xs-9">
+                      <input type="text" class="form-control input-lg srf" maxlength="16" id="inputEmail3"
+                             placeholder="Input your phone number"
+                             name="member.mobile"
+                             style="font-size: 0.7rem;height: 2rem">
+                  </div>
+                  <div class="interval col-sm-12 col-xs-12"></div>
+                  <div class="hr col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>
+              </div>*#
+
+
+            #*   <div class="form-group">
+                   <label for="inputPassword3" class="control-label col-sm-2 col-xs-2 text-right"><span
+                           class="glyphicon glyphicon-phone"></span></label>
+                   <div class="input-group col-sm-10 col-xs-10">
+                       <input type="text" class="form-control" id="inputPassword3" name="verificationCode"
+                              placeholder="Verifiction code" maxlength="6"
+                              style="font-size: 0.5rem">
+                       <span class="input-group-btn">
+      <button class="btn" type="button" id="send">Send</button>
+     </span>
+
+                   </div>
+               </div>*#
+            </form>
+        </div>
+
+
+        <div class="">
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <!-- 标题分隔线  -->
+            <div class="hr-h1 col-sm-offset-1 col-xs-offset-1 col-sm-3 col-xs-3"></div>
+            <h1 class="text-center  col-sm-4 col-xs-4" style="font-size: 0.8rem">ORDER</h1>
+            <div class="hr-h1  col-sm-3 col-xs-3"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            #if($rcProds&&!$rcProds.isEmpty())
+                #foreach($rcProd in $rcProds)
+                    #set($index = ${velocityCount} - 1)
+                    #if($rcProd.prodSkuPropInfos&&!$rcProd.prodSkuPropInfos.isEmpty())
+                        #foreach($prodSkuPropInfo in $rcProd.prodSkuPropInfos)
+                            #set($indexx = ${velocityCount} - 1)
+                            <input type="hidden" name="orderProds[$index].orderProdSkuPropInfos[$indexx].prodPropName"
+                                   value="$!prodSkuPropInfo.prodPropName">
+                            <input type="hidden" name="orderProds[$index].orderProdSkuPropInfos[$indexx].prodPropVal"
+                                   value="$!prodSkuPropInfo.prodPropVal">
+                        #end
+                    #end
+                    <input type="hidden" name="orderProds[$index].prodId" value="$!rcProd.prodId">
+                    <input type="hidden" name="orderProds[$index].prodSkuId" value="$!rcProd.prodSkuId">
+                    <input type="hidden" name="orderProds[$index].quantity" value="$!rcProd.quantity">
+                    <div class="media col-sm-offset-1 col-xs-offset-1 col-sm-11 col-xs-11">
+                        <div class="media-left media-top">
+                            <a href="#">
+                                <img class="media-object" src="$rcProd.prodImgUrl" alt="...">
+                            </a>
+                        </div>
+                        <div class="media-body">
+                            <h4 class="media-heading col-sm-7 col-xs-7"  style="text-overflow: ellipsis;overflow:hidden;white-space:nowrap; width: 6.4rem;">
+                               <span >$rcProd.name</span>
+                            </h4> <h4
+                                class="text-right col-sm-4 col-xs-4" style="margin-top: 0rem">
+                            #if($rcProd.quantity)
+                               <span >X$rcProd.quantity</span>
+                                #if($rcProd.priceManner==2)$rcProd.measureUnit#end
+                            #else
+                                <span style="color:green;"> WGT</span>
+                            #end</h4>
+                            <p class="media-heading col-sm-11 col-xs-11" style="font-size: 0.7rem; white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;font-weight: normal;width: 10rem;">
+                                #if($rcProd.prodSkuPropInfos&&!$rcProd.prodSkuPropInfos.isEmpty())
+                                    #foreach($prodSkuPropInfo in $rcProd.prodSkuPropInfos)
+                                        $prodSkuPropInfo.prodPropVal
+                                        #if($velocityCount!=$rcProd.prodSkuPropInfos.size())
+                                            *
+                                        #end
+                                    #end
+                                #end
+                            </p>
+                            #if($!rcProd.originPrice)
+                                <h4 class="text-right  col-sm-11 col-xs-11">
+                                    <del style="font-size: 0.6rem;color: #B5B5B5;">
+                                        Rp $viewutil.moneyStringFormat2($rcProd.originPrice)
+                                        #if($rcProd.priceManner==2)
+                                            /$!rcProd.measureUnitCount$!rcProd.measureUnit
+                                        #end
+                                    </del>
+                                </h4>
+                            #end
+                            <h4 class="text-right  col-sm-11 col-xs-11">
+                                Rp $viewutil.moneyStringFormat2($rcProd.price)
+                                #if($rcProd.priceManner==2)
+                                    /$rcProd.measureUnitCount$rcProd.measureUnit
+                                #end
+                            </h4>
+                        </div>
+                    </div>
+                    <div class="interval col-sm-12 col-xs-12"></div>
+                    <div class="interval col-sm-12 col-xs-12"></div>
+                    #if($velocityCount!=$rcProds.size())
+                        <div class="hr col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>
+                    #end
+                    <div class="interval col-sm-12 col-xs-12"></div>
+                #end
+            #end
+        #*        <div class="media col-sm-offset-1 col-xs-offset-1 col-sm-11 col-xs-11">
+          <div class="media-left media-middle">
+            <a href="#">
+              <img class="media-object" src="https://p3.ssl.qhimg.com/t011260d3bd48590359.jpg" alt="...">
+            </a>
+          </div>
+          <div class="media-body">
+              <h4 class="media-heading col-sm-7 col-xs-7">Patin Garang Asam</h4> <h4 class="text-right col-sm-4 col-xs-4">
+              X1</h4>
+              <p class="media-heading col-sm-7 col-xs-7">Tast 1</p> <h4 class="text-right col-sm-4 col-xs-4">Rp 45.000</h4>
+          </div>
+        </div>
+                <!-- 单分隔线-->
+                <div class="interval col-sm-12 col-xs-12"></div>
+                <div class="hr col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>
+                <div class="media col-sm-offset-1 col-xs-offset-1 col-sm-11 col-xs-11">
+          <div class="media-left media-middle">
+            <a href="#">
+              <img class="media-object" src="https://p3.ssl.qhimg.com/t011260d3bd48590359.jpg" alt="...">
+            </a>
+          </div>
+          <div class="media-body">
+              <h4 class="media-heading col-sm-7 col-xs-7">Patin Garang Asam</h4> <h4 class="text-right col-sm-4 col-xs-4">
+              X1</h4>
+              <p class="media-heading col-sm-7 col-xs-7">Tast 1</p> <h4 class="text-right col-sm-4 col-xs-4">Rp 45.000</h4>
+          </div>
+        </div>*#
+            <!-- 双分隔线 -->
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="hr2 col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+        </div>
+        <div class="clearfix">
+            <div class="interval col-sm-12 col-xs-12"></div>
+            #if($weightFlag)
+	            <div class="col-sm-offset-1 col-xs-offset-1  col-sm-10 col-xs-10"
+	                 style="background-color: #FFF7EF;color:#FF8B1D ;font-size: 0.6rem;padding: 0.4rem">The following prices
+	                are not include the WGT
+	                dishes. Subimt order and after the waiter weighing,it will be changed to the true grand total.
+	            </div>
+            #end
+            <div class="interval col-sm-12 col-xs-12"></div>
+
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="form-group">
+                <label class="col-sm-offset-1 col-xs-offset-1 col-sm-6 col-xs-6 control-label control-label-static">Sub
+                    total
+                    :</label>
+                <div class="col-sm-4 col-xs-4">
+                    <p class="form-control-static text-right" style="color:#000">
+                        Rp $viewutil.moneyStringFormat2(${rcOrder.productPrice})</p>
+                </div>
+            </div>
+
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="form-group">
+                <input type="hidden" name="serviceFeeRate" value="$rcOrder.serviceFeeRate"/>
+                <label class="col-sm-offset-1 col-xs-offset-1 col-sm-6 col-xs-6 control-label control-label-static">Service
+                    Fee
+                    $viewutil.formatPercent($rcOrder.serviceFeeRate):</label>
+                <div class="col-sm-4 col-xs-4">
+                    <input type="hidden" name="serviceFee" value="$rcOrder.serviceFee"/>
+                    <p class="form-control-static text-right" style="color:#000">
+                        Rp $viewutil.moneyStringFormat2(${rcOrder.serviceFee})</p>
+                </div>
+            </div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="form-group">
+                <input type="hidden" name="taxRate" value="$rcOrder.taxRate"/>
+                <label class="col-sm-offset-1 col-xs-offset-1 col-sm-6 col-xs-6 control-label control-label-static">Tax
+                    $viewutil.formatPercent($rcOrder.taxRate):</label>
+                <div class="col-sm-4 col-xs-4">
+                    <input type="hidden" name="tax" value="$rcOrder.tax"/>
+                    <p class="form-control-static text-right" style="color:#000">
+                        Rp $viewutil.moneyStringFormat2(${rcOrder.tax})</p>
+                </div>
+            </div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="hr col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="form-group">
+                <label class="col-sm-offset-1 col-xs-offset-1 col-sm-6 col-xs-6 control-label control-label-static">Grand
+                    total:</label>
+                <div class="col-sm-4 col-xs-4">
+                    <input type="hidden" name="payPrice" value="$rcOrder.payPrice"/>
+                    <p class="form-control-static text-right" style="color:#FF8B1D;font-weight: bolder">
+                        Rp $viewutil.moneyStringFormat2(${rcOrder.payPrice})</p>
+                </div>
+            </div>
+
+
+            <div class="interval col-sm-12 col-xs-12"></div>
+        #*   <div class="hr col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10"></div>*#
+            <div class="interval col-sm-12 col-xs-12"></div>
+        #*   <div class="form-group">
+               <label class="col-sm-offset-1 col-xs-offset-1 col-sm-6 col-xs-6 control-label control-label-static">Payment
+                   methed:</label>
+               <div class="col-sm-4 col-xs-4">
+                   <input type="hidden" name="paymentInterface" value="3"/>
+                   <p class="form-control-static text-right" style="color: #969696;">offline</p>
+               </div>
+           </div>*#
+
+        </div>
+        <!-- 备注开始 -->
+        <div class="clearfix div-margin-top">
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="form-group">
+                <label class="col-sm-offset-1 col-xs-offset-1 col-sm-4 col-xs-4 control-label" for="note"
+                       style="color: #969696;">Note:</label>
+
+                <div class="col-sm-offset-1 col-xs-offset-1 col-sm-10 col-xs-10 " id="noteDiv">
+
+                </div>
+            </div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+        </div>
+
+        <!-- 备注开始 -->
+        <div class="clearfix div-margin-top">
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="form-group">
+                <label class="col-sm-offset-1 col-xs-offset-1 col-sm-6 col-xs-6 control-label control-label-static" style="color: black">Where
+                    to eat:</label>
+                <div class="col-sm-4 col-xs-4">
+                    <input type="hidden" name="eatType" value="1"/>
+                    <p class="form-control-static text-right" style="margin-right: 0.8rem;">
+                    	<span style="color:#FF8B1D;font-weight: bolder" id="eatType">Eat in</span>
+                    </p>
+                    	<img class="ims" alt="" src="$root/static/images/food/ic_more.png">
+                </div>
+
+            </div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+        </div>
+        <div class="clearfix div-margin-top">
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="form-group">
+                <label class="col-sm-offset-1 col-xs-offset-1 col-sm-6 col-xs-6 control-label control-label-static" style="color: black">Customers
+                    number:</label>
+                <div class="col-sm-4 col-xs-4">
+                    <input type="hidden" name="customerCount" value="1"/>
+                    <img alt="" src="/restaurant/static/images/food/btn_add.png" style="float: right;height: 1rem" id="add">
+                    <div style="float: right;width: 2rem;font-size: 0.8rem;text-align: center" id="customerCount">1
+                    </div>
+                    <img alt="" src="/restaurant/static/images/food/btn_reduce.png" style="float: right;height: 1rem" id="reduce">
+                </div>
+            </div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+            <div class="interval col-sm-12 col-xs-12"></div>
+        </div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit"></div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit"></div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit "></div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit"></div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit"></div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit"></div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit"></div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit"></div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit"></div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit"></div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit"></div>
+        <div class="interval col-sm-12 col-xs-12 payPriceSubmit"></div>
+
+        <div class="clearfix div-margin-top payPriceSubmit"
+             style="position: fixed;bottom: 0rem;width: 100%;background-color: transparent">
+            <div class="col-sm-8 col-xs-8 text-center"
+                 style="
+                 font-size:0.8rem;background-color: #313439;opacity: 0.8;color:white;height:hei font-weight: normal;height: 2.5rem;line-height: 2.5rem;">
+                Rp $viewutil.moneyStringFormat2(${rcOrder.payPrice})
+            </div>
+            <div class="col-sm-4 col-xs-4 text-center"
+                 style="font-size:0.7rem; background-color: #FF8B1D;color:white;font-weight: bold;height: 2.5rem;line-height: 2.5rem">
+                <button type="button" id="submit" style="background-color: #FF8B1D;font-size: 0.8rem;
+                border-width: 0;font-weight: normal;
+                  width: 5.8rem;  margin-left: -0.7rem;">Submit
+                </button>
+
+            </div>
+        </div>
+
+
+        <!-- Modal -->
+    #*  <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" >
+          <div class="modal-dialog" role="document" style="margin-top:5rem;width:14rem;border-width: 0rem">
+              <div class="modal-content" style="background-color: black;border-width: 0rem">
+                  <div class="modal-header" style="background-color: black;border-width: 0rem">
+
+                      <h4 class="modal-title text-center" id="myModalLabel" style="color:white"
+                          style="font-size: 1.5rem">
+                          Now please select where to eat?</h4>
+                  </div>
+                  <div class="modal-body btn-group-vertical" role="group"
+                       style="background-color: black;border-width: 0rem">
+
+
+
+
+                  </div>
+                  <div class="modal-footer" style="background-color: black;border-width: 0rem">
+                      <!--   <button type="button" style="margin-right:4rem" class="btn btn-default" data-dismiss="modal" >Cancel</button> -->
+                  </div>
+              </div>
+          </div>
+      </div>*#
+    #*    <div class="shade_layout loading">
+            <img src="$root/static/images/food/5-121204193933-51.gif">
+        </div>*#
+
+
+    </fieldset>
+
+</form>
+
+<script type="text/javascript">
+window.addEventListener("touchmove",function(){ 
+ 	window.addEventListener("touchend",stopTouchendPropagation, true);
+ 	function stopTouchendPropagation(ev){
+        ev.stopPropagation();
+        setTimeout(function(){
+            window.removeEventListener('touchend', stopTouchendPropagation, true);
+        }, 50);
+    }
+ });
+    !function () {
+        function a() {
+            document.documentElement.style.fontSize = document.documentElement.clientWidth
+                    / 16 + "px";
+            document.getElementsByTagName("html")[0].style.height = "auto";
+        }
+
+        var b = null;
+        window.addEventListener("resize", function () {
+            clearTimeout(b), b = setTimeout(a, 1)
+        }, !1), a();
+    }(window);
+</script>
+
+<script type="text/javascript">
+    /*function checkNotSpecial(e) {
+        var specialKey = "[`~!#$^&*()=|{}':;',\\[\\].<>/?~！#￥……&*（）——|{}【】‘；：”“'。，、？]‘’";//Specific Key list
+        var et = e || window.event;
+        var keycode = et.charCode || et.keyCode;
+        if (specialKey.indexOf(String.fromCharCode(keycode)) >= 0) {
+            if (window.event)
+                window.event.returnValue = false;
+            else
+                e.preventDefault();//for firefox
+        }
+    }*/
+    function checkNotSpecial(th) {
+        if(/["'<>%;)(&+]/.test(th.value)){
+             $(th).val(th.value.replace(/["'<>%;)(&+]/,""));
+           }
+    }
+    function checkNotNumber(e) {
+        var et = e || window.event;
+        var keycode = et.charCode || et.keyCode;
+        console.log(keycode)
+        if (!(keycode>=96&&keycode<=105||keycode>=48&&keycode<=57||keycode==8||keycode==13||keycode>=37&&keycode<=40)) {
+            if (window.event)
+                window.event.returnValue = false;
+            else
+                e.preventDefault();//for firefox
+        }
+    }
+    function checkEnter(e) {
+        var et = e || window.event;
+        var keycode = et.charCode || et.keyCode;
+        if (keycode == 13) {
+            if (window.event)
+                window.event.returnValue = false;
+            else
+                e.preventDefault();//for firefox
+        }
+    }
+window.alert = function(name){
+	var iframe = document.createElement("IFRAME");
+	iframe.style.display="none";
+	iframe.setAttribute("src", 'data:text/plain,');
+	document.documentElement.appendChild(iframe);
+	window.frames[0].window.alert(name);
+	iframe.parentNode.removeChild(iframe);
+}
+    $(function () {
+         $('#noteDiv').html('<textarea class="form-control srf" onkeydown="checkEnter(event)"  id="note" placeholder="Write your note to merchant."  style="font-size: 0.7rem;" name="buyerMemo" maxlength="140">' +
+                 '</textarea>');
+
+
+
+
+
+
+        $('#add').bind('touchend', function () {
+            if($('#customerCount').text()!=50)
+            $('#customerCount').text(parseInt($('#customerCount').text()) + 1);
+            $('input[name="customerCount"]').val($('#customerCount').text());
+        });
+        $('#reduce').bind('touchend', function () {
+            if($('#customerCount').text()!=1)
+            $('#customerCount').text(parseInt($('#customerCount').text())-1);
+            $('input[name="customerCount"]').val($('#customerCount').text());
+        });
+
+        function format_number(n) {
+            var b = parseInt(n).toString();
+            var len = b.length;
+            if (len <= 3) {
+                return b;
+            }
+            var r = len % 3;
+            return r > 0 ? b.slice(0, r) + "," + b.slice(r, len).match(/\d{3}/g).join(",") : b.slice(r, len).match(/\d{3}/g).join(",");
+        }
+
+        var windowInnerHeight = window.outerHeight;
+        $(window).resize(function () {
+            if (window.outerHeight == windowInnerHeight || (windowInnerHeight - window.outerHeight) / windowInnerHeight < 0.15) {
+                $('.payPriceSubmit').show();
+            } else {
+                $('.payPriceSubmit').hide();
+            }
+        });
+
+
+        var send = function () {
+
+            if (!$('input[name="mobile"]').val()) {
+                alert('mobile is request.');
+            } else {
+                $(this).prop('disabled', 'disabled');
+                $(this).unbind('touchend');
+                $(this).css('color', '#ABABAB');
+                var i = 60;
+                $('#send').text('Resend(' + i + 's)');
+                var timer = setInterval(function () {
+                    $('#send').text('Resend(' + i-- + 's)');
+                    if (i < 0) {
+                        $('#send').bind('touchend', send);
+                        clearInterval(timer);
+                        $('#send').text('Send');
+                        $('#send').css('color', '#FF8B1D');
+                        $('#send').removeProp('disabled');
+
+                    }
+                }, 1000);
+                $.post(contextPath + '/page/smsreguler', {mobile: $('input[name="mobile"]').val()}, function (data) {
+                });
+            }
+        }
+        //发送短信
+        $('#send').bind('touchend', send);
+
+
+        $('.shade_layout').hide();
+
+        $('#submit').parent().bind('touchend', function () {
+            $('.shade_layout').show();
+            $('.userinfo').show();
+        });
+        $('#eatType').parent().bind('touchend', function () {
+            $('.shade_layout').show();
+            $('.skuarea').show();
+            if($('#eatType').text()=='Eat in'){
+                $('#eatIn').css({'color':'#FF8B1D'
+                ,'background-image':'url($root/static/images/food/ic_eatin_selected.png)'})
+
+                $('#takeOut').css({'color':'#000000'
+                        ,'background-image':'url($root/static/images/food/ic_tackout_default.png)'
+                })
+            }else{
+                $('#eatIn').css({'color':'#000000'
+                        ,'background-image':'url($root/static/images/food/ic_eatin_default.png)'})
+                $('#takeOut').css({'color':'#FF8B1D',
+                    'background-image':'url($root/static/images/food/ic_tackout_selected.png)'})
+            }
+        });
+        //选择就餐方式
+        $('#eatIn').bind('touchend', function () {
+            $('#eatType').text('Eat in');
+            $('#eatType').css('color', '#FF8B1D')
+            $('input[name="eatType"]').val(1);
+            $('.shade_layout').hide();
+            $('.skuarea').hide();
+        });
+        $('#takeOut').bind('touchend', function () {
+            $('#eatType').text('Take out');
+            $('#eatType').css('color', '#FF8B1D')
+            $('input[name="eatType"]').val(2);
+            $('.shade_layout').hide();
+            $('.skuarea').hide();
+        });
+        $('.shade_layout').bind('touchend', function () {
+            $('.shade_layout').hide();
+            $('.skuarea').hide();
+            $('.userinfo').hide();
+        })
+        /*    $('#myModal').on('shown.bs.modal', function (e) {
+              $('.eatIn').show();
+            })
+            $('#myModal').on('hidden.bs.modal', function (e) {
+                $('.eatIn').hide();
+            })*/
+        $('#submit').bind("touchend", function () {
+            //  $('.loading').show();
+        });
+        var contextPath = $('input[name="contextPath"]').val();
+        $("#submitOrderForm").validate({
+            submitHandler: function (form) {
+                $(form).ajaxSubmit({
+                    success: function (data) {
+                        // $('.loading').hide();
+
+                        if (data.code != '1') {
+                            alert(data.result);
+
+                        } else {
+                            localStorage.removeItem("cart")
+                            localStorage.removeItem("num")
+
+                            //order success
+                            $.cookie('orderId', data.data.orderId);
+                            window.location.assign(contextPath + '/page/order?orderId=' + data.data.orderId);
+                        }
+                    }, error: function (data) {
+
+
+                    }
+                });
+            },
+            rules: {
+                kaptcha: {
+                    remote: {
+                        url: contextPath + "/login/checkKaptcha",     //后台处理程序
+                        type: "post",               //数据发送方式
+                        dataType: "json",           //接受数据格式
+                        data: {                     //要传递的数据
+                            kaptcha: function () {
+                                return $('input[name="kaptcha"]').val();
+                            }
+                        }
+                    }
+                }
+            },
+            messages: {
+                kaptcha: {
+                    remote: "验证码错误!"
+                }
+            }
+            , errorPlacement: function (error, element) {
+                error.appendTo(element.parent())
+                /*    if ($(element).prop('name') == 'mobile') {
+
+
+                    } else */
+
+            }
+        });
+
+
+    });
+    Zepto(function ($) {
+        var contextPath = $('input[name="contextPath"]').val();
+
+
+        /*   $('#eatin').bind('touchend', function () {
+
+           });*/
+
+
+    });
+
+</script>
+</body>
+</html>

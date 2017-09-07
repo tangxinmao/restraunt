@@ -1,0 +1,98 @@
+#set($root=$request.getContextPath())
+<input type="hidden" value="$!page.currentPage" id="currentPage" />
+	<table class="table order_table mt10" id="review">
+	
+		<tr>
+			<th><a href="javascript:void(0)" onclick="chooseAllCheckbox()">All</a></th>
+			<th >Voucher ID</th>
+			<th >Voucher Type</th>
+			<th>Product</th>
+			<th >User Range</th>
+<!-- 			<th >Created Time</th> -->
+			<th >Voucher Name</th>
+			<th >Discount</th>
+			<!-- <th >Minimum Buy Price</th>
+			<th >Total QTY</th>
+			<th >Remaining QTY</th> -->
+			<th >Start Time</th>
+			<th >Expire Time</th>
+			<th >Status</th>
+			<th class="tac">Actions</th>
+		</tr>
+		#if($list&&!$list.isEmpty())
+                           #foreach($item in $list)
+		<tr>
+			<td><input type="checkbox" name="radio" id="radio" value="$!item.couponId"></td>
+		    <td>$!{item.couponId}</td>
+		    <td>
+		        #if($!item.couponType==1)
+		        	Category
+		        #else
+		       		Product
+		    	#end
+		    </td>
+		    <td>
+		    	$!item.prod.name
+		    </td>
+		    <td>
+		    #if($!item.type==1)
+		    $!{item.merchantName}
+		    #end
+		    #if ($!item.type==2)
+		    $!{item.prodCatName}
+		    #end
+		    </td>
+<!-- 							    <td>#if(${item.couponGenTime})$viewutil.dateFormat($!{item.couponGenTime})#else--#end</td> -->
+			<td>$!{item.name}</td>
+			<td>
+				#if($item.discountType==1)
+					#set($percent = $item.amount * 100)
+					${percent}%
+				#else
+					Rp #if ($!{item.amount})$viewutil.moneyStringFormat($!{item.amount})#else 0 #end<input type="hidden" value="$!{item.amount}">
+				#end
+			</td>
+			<!-- <td>Rp #if ($!{item.baseAmount})$viewutil.moneyStringFormat($!{item.baseAmount})#else 0 #end<input type="hidden" value="$!{item.baseAmount}"></td>
+			<td>$!{item.initCount}</td>
+		    <td>$!{item.leftCount}</td> -->
+		    <td>#if(${item.effectTime})$viewutil.dateFormat($!{item.effectTime})#else--#end</td>
+		    <td>#if(${item.expireTime})$viewutil.dateFormat($!{item.expireTime})#else--#end</td>
+			
+		    <td>
+		        #if ($!{item.status}==4)<span style="color:#9B9B9B">Overdue</span>#end
+				#if ($!{item.status}==2)<span  style="color:#4ED321">Ongoing</span>#end
+				#if($!{item.status}==1)<span style="color:red">Waiting to publish</span>#end 
+				#if($!{item.status}==3)<span style="color:red">Reverted</span>#end 
+			    <input type="hidden" value="${item.status}">
+			</td>
+			<td>
+				 #if(!$session.getAttribute("RcVendor"))
+				 	#if($!{item.status}==1||$!{item.status}==3)
+			    		<a href="javascript:void(0)" onclick="showConfirm('Are you sure to publish this voucher?',&quot;publishCoupons('$!{item.couponId}')&quot;)">Publish</a>
+					#end
+				
+					#if($!{item.status}==1)
+				    	<a href="javascript:void(0)" onclick="showConfirm('Are you sure to delete this voucher?',&quot;deleteCoupons('$!{item.couponId}')&quot;)">Delete</a>
+					#end
+					#if($!{item.status}==2)
+				     	<a href="javascript:void(0)" onclick="showConfirm('Are you sure to revert this voucher?',&quot;revertCoupons('$!{item.couponId}')&quot;)">Revert</a>
+					#end
+				#end		
+			</td>
+		</tr>
+		#end
+		#end
+	</table>
+	<div class="batsOpt">
+		<h1>Bulk Action</h1>
+		 #if(!$session.getAttribute("RcVendor"))
+		<input class="btnG bwt100 bht30 bfz12 fl" type="button" value="Publish" onclick="batsPublish()">
+		<input class="btnG bwt100 bht30 bfz12 fl ml10" type="button" value="Revert" onclick="batsRevert()">
+		<input class="btnO bwt60 bht30 bfz12 fl ml10" type="button" value="Delete" onclick="batsDelete()">
+		#end
+	</div>
+   <input id="page_pageSize" type="hidden" value="$page.pageSize" />
+   <input id="page_totalRows" type="hidden" value="$page.totalRows" />
+   <input type="hidden" value="$!page.currentPage" id="currentPage" />
+   <div id="pageNm_tip" style="text-align: right; color:red; margin-bottom:20px"></div>
+   <div class="page_wrap" style="padding-right: 10px">#vm_page2</div>

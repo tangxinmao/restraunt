@@ -1,0 +1,26 @@
+<table class="table order_table mt10">
+    <tr>
+        <th width="10%">City Name</th>
+        <th width="10%">Province</th>
+        <th width="20%" class="tac">Actions</th>
+    </tr>
+	#if($citys&&!$citys.isEmpty())
+		#foreach($city in $citys)
+            <tr>
+                <td>$!{city.name}</td>
+                <td>$!{city.provinceName}</td>
+                <td>
+                    <a href="javascript:void(0)" onclick="javascript:editCityWin('$!city.cityId',this)">Edit</a>
+                    |
+                    <a href="javascript:void(0)" onclick="showConfirm('Are you sure to delete city?',&quot;deleteCity('$!{city.cityId}')&quot;)">Delete</a>
+
+                </td>
+            </tr>
+		#end
+	#end
+</table>
+					   <input id="page_pageSize" type="hidden" value="$page.pageSize" />
+					   <input id="page_totalRows" type="hidden" value="$page.totalRows" />
+					   <input type="hidden" value="$!page.currentPage" id="currentPage" />
+					   <div id="pageNm_tip" style="text-align: right; color:red; margin-bottom:20px"></div>
+					   <div class="page_wrap" style="padding-right: 10px">#vm_page2</div>

@@ -1,0 +1,119 @@
+#set($root=$request.getContextPath())
+<input type="hidden" value="$!page.currentPage" id="currentPage" />
+<table class="table order_table mt10" id="review">
+	<tr width="100%" style="display:none">
+		<th colspan="12" class="th_lev1"><span class="fl">Sort By</span>
+			<div onclick="goThisPage('sort')" class="sortDiv">
+					<p class="sortP">In Selling Time</p>
+					<span class="item dot-top checked"></span> 
+					<span class="item dot-bottom checked"></span> 
+			</div>
+		</th>
+	</tr>
+	<tr>
+    	<th width="4%"><a href="javascript:void(0)" onclick="chooseAllCheckbox()">All</a></th>
+		<th width="18%">Product Name</th>
+		<th width="8%">Product ID</th>
+		<th width="8%">Adword</th>
+		<th width="8%">Price</th>
+		<th width="8%">Price Manner</th>
+		<th width="6%">Restaurant Name</th>
+		<th width="9%">Status</th>
+		<th width="7%">Creat Time</th>
+		<!--  <th width="9%">Remove from Shelves Time</th>-->
+		#if($session.getAttribute("RcMerchant"))<th width="16%" class="tac">Actions</th>#end
+	</tr>
+	#if($productList&&!$productList.isEmpty())
+                          #foreach($product in $productList)
+                          	#if ( "00" != ${product.prodStatus})
+	<tr>
+		<td>
+			<input type="checkbox" name="radio" id="radio" value="$!{product.prodId}">
+		</td>
+		<td>
+			<div class="fl">
+				<img alt="" src="$!{product.prodImgUrl}?rs=90_90" />
+			</div>
+			<div title="$!{product.name}" class="mt10" style="width: 100px; white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">$!{product.name}</div>
+		</td>
+		<td>$!{product.prodId}</td>
+		<td>
+		<p title="$!{product.ad}" style="width:100px; white-space: nowrap; overflow: hidden;text-overflow: ellipsis;">$!{product.ad}</p>
+		</td>
+		<td>Rp $viewutil.moneyStringFormat($!{product.price})</td>
+		<td>
+			#if($product.priceManner == 1)
+				Fixed Price
+			#elseif($product.priceManner == 2)
+				By Weight
+			#end
+		</td>
+		<td>$!{product.merchant.name}</td>
+		<td>
+		  #if (3 == ${product.status})
+		    <b style="color:#FF8B1D;">Not In Selling</b>
+		  #elseif (1 == ${product.status}) 										 
+			<b style="color:#FF8B1D;">Sold Out</b>
+		  #elseif (2 == ${product.status})
+		    <b style="color:#4ED321;">In Selling</b>
+		  #end
+		</td>
+		<td>
+		  #if(${product.createTime})
+		    $viewutil.dateFormat(${product.createTime})
+		  #else
+		    --
+		  #end
+		</td>
+		<!-- <td>
+		  #if(${product.prodOutOfStockTime})
+		    $viewutil.dateFormat(${product.prodOutOfStockTime})
+		  #else
+		    --
+		  #end
+		</td> -->
+		#if($session.getAttribute("RcMerchant"))<td>
+			#if (2 != ${product.status})
+			<form id="updategoods" method="post" action="$root/product/initupdate">
+				<input type="hidden" id="formprodId" name="prodId" value="$!{product.prodId}">
+			</form>
+			#end
+			#if (2 == ${product.status})
+				<span>Edit</span> 
+				| <span>Delete</span> |
+				<a href="javascript:void(0)" onclick="showConfirm('Are you sure to remove product?',&quot;beginremoveGoods('$!{product.prodId}')&quot;)">Remove from menu</a> |
+		    	<a href="javascript:void(0)" onclick="showConfirm('Are you sure set the product to out of stock?',&quot;beginputDownGoods('$!{product.prodId}')&quot;)">Sold out</a>
+			#elseif(1 == ${product.status})
+				<span>Edit</span> 
+				| <span>Delete</span> |
+				<a href="javascript:void(0)" onclick="showConfirm('Are you sure to remove product?',&quot;beginremoveGoods('$!{product.prodId}')&quot;)">Remove from menu</a> |
+		    	<a href="javascript:void(0)" onclick="showConfirm('Are you sure to put on the product?',&quot;begiputUpGoods('$!{product.prodId}')&quot;)">Add to selling</a>
+			#elseif(3 == ${product.status})
+				<a href="javascript:void(0)" onclick="javascript:$(this).parent().find('form').submit();">Edit</a>
+				|
+				<a href="javascript:void(0)" onclick="showConfirm('Are you sure to delete product?',&quot;deleteProd('$!{product.prodId}')&quot;)">Delete</a> |
+				<a href="javascript:void(0)" onclick="showConfirm('Are you sure to put on the product?',&quot;begiputUpGoods('$!{product.prodId}')&quot;)">Add to menu</a>
+			#end
+		</td>
+		#end
+	</tr>
+	#end
+	#end
+	#end
+</table>
+#if($session.getAttribute("RcMerchant"))
+	<div class="batsOpt">
+		<h1>Bulk Action</h1>
+		<input class="btnG bwt100 bht30 bfz12 fl" type="button" value="Add to Menu" onclick="batsPutOn()">
+		<input class="btnG bwt140 bht30 bfz12 fl ml10" type="button" value="Sold Out" onclick="batsPutDown()">
+		<input class="btnG bwt140 bht30 bfz12 fl ml10" type="button" value="Remove from Menu" onclick="batsRemove()">
+		#if(!$session.getAttribute("RcMerchant"))
+			<input class="btnO bwt60 bht30 bfz12 fl ml10" type="button" value="Delete" onclick="batsDelete()">
+		#end
+	</div>
+#end
+<input id="page_pageSize" type="hidden" value="$page.pageSize" />
+<input id="page_totalRows" type="hidden" value="$page.totalRows" />
+<input type="hidden" value="$!page.currentPage" id="currentPage" />
+<div id="pageNm_tip" style="text-align: right; color:red; margin-bottom:20px"></div>
+<div class="page_wrap" style="padding-right: 10px">#vm_page2</div>

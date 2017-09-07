@@ -1,0 +1,20 @@
+#foreach($order in $list)
+	<div class="card" id="$order.orderId">
+		<h1>$order.merchantName</h1>
+		<div class="hr"></div>
+		<p>Order Time: $viewutil.dateFormat($order.createTime)</p>
+		<p>Grand Total: Rp$viewutil.moneyStringFormat2($order.payPrice)</p>
+		
+		#if($order.hasEval==0)
+		<div class="hr"></div>
+		<div class="review">
+			<span class="lebel">Review</span>
+			<span class="to">To review ></span>
+		</div>
+		#else
+			<div class="img">
+				<img class="complete" src="$root/static/images/food/ic_stamp_completed.png">
+			</div>
+		#end
+	</div> 
+#end

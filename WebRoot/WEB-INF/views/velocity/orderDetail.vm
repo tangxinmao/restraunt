@@ -1,0 +1,459 @@
+#set($layout = "layout/main.vm") #set($title =
+"Brand list" ) #set($extCss =
+"/static/css/jquery-ui-timepicker-addon.min.css") #set($extJs =
+"/static/js/jquery.form.min.js,/static/js/jquery.validate.min.js,/static/js/additional-methods.min.js,/static/js/order.js,/static/js/jquery.ui.datepicker.js,/static/js/ajaxfileupload.js,/static/js/jquery.PrintArea.js")
+
+#set($root=$request.getContextPath())
+<input type="hidden" value="$root" id="rootPath">
+<div class="rightContent fl">
+	<div class="tpos ml30 mt25" style="border-bottom-width: 0px">
+		<h1 class="fl">Order List > Order Detail</h1>
+		<div class="fr mt10">
+			<input type="button" value="Back to Order List"
+				style="width: 200px; height: 32px; color: #213864; background-color: #f4f5f9; border: 1px solid #B8BDD3;"
+				onclick="javascript:window.location.href='$root/order/orderIndex'">
+		</div>
+	</div>
+	<div class="service_wrap clearfix" id="productListDiv"
+		style="padding: 3%;">
+		<table class="table order_table ">
+			<tr>
+				<th colspan="4">Order Information</th>
+			</tr>
+			<tr>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Restaurant
+					ID</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">$!{order.merchant.merchantId}</td>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Restaurant</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">$!{order.merchant.name}</td>
+			</tr>
+			<tr>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Order
+					ID</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">$!{order.orderId}</td>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Order Status</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">#if ($!{order.sellerStatus}==1)Unconfirmed#end
+					#if ($!{order.sellerStatus}==2)<span style="color:green">Grabbed</span>#end
+					#if ($!{order.sellerStatus}==3)<span style="color:green">Confirmed</span>#end
+					#if ($!{order.sellerStatus}==4)<span style="color:red">Complete</span>#end
+					#if ($!{order.sellerStatus}==5)Canceled#end
+			  </td>
+			</tr>
+				<tr>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Order
+					Time</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">#if(${order.createTime})$viewutil.dateFormat(${order.createTime})#else--#end</td>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Confirm Time</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">#if(${order.payTime})$viewutil.dateFormat(${order.payTime})#else--#end</td>
+			</tr>
+				<tr>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Member ID</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">$!{order.member.memberId}</td>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Member</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">$!{order.member.name}</td>
+			</tr>
+			<tr>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Mobile</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">$!{order.member.mobile}</td>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Way for meal</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">#if($!{order.eatType}==1)Eat in#elseif($!{order.eatType}==2)Take out#end</td>
+			</tr>
+				<tr>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Table</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">
+                    #if($!order.sellerStatus==4||$!order.sellerStatus==5)
+                    <select  name="sectionName" disabled  value="$!{order.sectionName}">
+						<option value="$!{order.sectionName}" selected>$!{order.sectionName}</option>
+					</select>
+                        <select  name="tableNumber" disabled value="$!{order.tableNumber}">
+                            <option value="$!{order.tableNumber}" selected>$!{order.tableNumber}</option>
+                        </select>
+
+				#else
+                    <select  name="sectionId"  value="$!order.sectionId">
+				#if($sections&&!$sections.isEmpty())
+					#foreach($item in $sections)
+                        <option value="$!{item.sectionId}"
+							#if($order.sectionId==$item.sectionId)
+                                selected
+						#end
+						>$!{item.name}</option>
+						#end
+					#end
+                    </select>
+                    <select  name="tableId"  value="$!{order.tableId}">
+				#if($tables&&!$tables.isEmpty())
+					#foreach($item in $tables)
+                        <option value="$!{item.tableId}"
+							#if($order.tableId==$item.tableId)
+                                selected
+						#end
+						>$!{item.tableNumber}</option>
+						#end#end
+                    </select><a style="color:blue" onclick="table(this,$!{order.orderId})">save</a>
+					##<input type="number" oninput="if(value.length>10)value=value.slice(0,10)" name="table" value="$!{order.tableNumber}"/> <a style="color:blue" onclick="table(this,$!{order.orderId})">save</a>
+					#end
+				</td>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Number of meals</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">
+#if($!order.sellerStatus==4||$!order.sellerStatus==5)
+    <input name="table" value=" $!{order.customerCount}" readonly/>
+	#else
+					<input type="number" oninput="if(value.length>10)value=value.slice(0,10)" name="table" value="$!{order.customerCount}"/> <a style="color:blue" onclick="meals(this,$!{order.orderId})">save</a>
+	#end
+				</td>
+			</tr>
+            <tr>
+                <td
+                        style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf"> Customer Remark
+                </td>
+                <td style="text-align: left; width: 30%; padding-left: 2%" colspan="3">$!{order.buyerMemo}</td>
+
+            </tr>
+		</table>
+		<table class="table order_table mt10">
+			<tr>
+				<th colspan="4">Price Information</th>
+			</tr>
+			<tr>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Sub Total</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">Rp $viewutil.moneyStringFormat($!{order.productPrice})</td>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Service Fee $viewutil.formatPercent($order.merchant.serviceCharge)</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">Rp $viewutil.moneyStringFormat($!{order.serviceFee})</td>
+			</tr>
+			<tr>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Tax $viewutil.formatPercent($order.merchant.taxRate)
+					</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">Rp $viewutil.moneyStringFormat($!{order.tax})</td>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Rounding
+					</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">Rp $viewutil.moneyStringFormat($!{order.rounding})</td>
+			</tr>
+			<tr>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Grand Total
+					</td>
+				<td style="text-align: left; width: 30%; padding-left: 2%">Rp $viewutil.moneyStringFormat($!{order.payPrice})</td>
+			</tr>
+		</table>
+
+
+		<table class="table order_table mt10">
+			<tbody>
+				<tr width="100%">
+					<th colspan="9">Shopping List</th>
+				</tr>
+				<tr>
+					<th>Product ID</th>
+					<th>Product Name</th>
+					<th>SKU</th>
+					<th>Qty/Wgt</th>
+					<th>Single Price</th>
+					<th>Total Price</th>
+#if($!order.sellerStatus!=4&&$!order.sellerStatus!=5)
+                    <th>Actions</th>
+    #end
+				</tr>
+					#if($order.orderProds&&!$order.orderProds.isEmpty())
+		                              #foreach($orderProd in $order.orderProds)
+				<tr>
+					<td>$!{orderProd.prodId}</td>
+					<td>
+					<div class="fl">
+				<img alt="" src="$!{orderProd.prodImgUrl}?rs=90_90" />
+				</div>
+					<div class="mt10">$!{orderProd.prodName}</div>
+					</td>
+					<td>	#if($orderProd.orderProdSkuPropInfos&&!$orderProd.orderProdSkuPropInfos.isEmpty())
+					   #foreach($orderProdSkuPropInfo in $orderProd.orderProdSkuPropInfos)
+					      $!{orderProdSkuPropInfo.prodPropVal}
+					      #end
+					#end
+					</td>
+					<td>
+                    #if($!order.sellerStatus==4||$!order.sellerStatus==5)
+											  #if($orderProd.priceManner==2)
+                                                  <input name="measureUnitCount" value="$!{orderProd.quantity}" readonly style="width: 100px"/> $orderProd.measureUnit &nbsp;&nbsp;</td>
+											  #end
+
+											  #if($orderProd.priceManner==1)
+                                                  <input name="quantity" value="$!{orderProd.quantity}" readonly/> </td>
+											  #end
+											  #else
+												  #if($orderProd.priceManner==2)
+                                                      <input type="number" oninput="if(value.length>10)value=value.slice(0,10)" name="measureUnitCount" value="$viewutil.moneyIntegerFormat($!{orderProd.quantity})" style="width: 100px"/> $orderProd.measureUnit &nbsp;&nbsp;<a style="color:blue" onclick="quantity(this,$!{orderProd.orderProdId},$!{order.orderId})">save</a></td>
+												  #end
+
+												  #if($orderProd.priceManner==1)
+                                                      <input type="number" oninput="if(value.length>10)value=value.slice(0,10)" name="quantity" value="$viewutil.moneyIntegerFormat($!{orderProd.quantity})"/> <a style="color:blue" onclick="quantity(this,$!{orderProd.orderProdId},$!{order.orderId})">save</a></td>
+												  #end
+												  #end
+
+
+					<td>Rp $viewutil.moneyStringFormat($!{orderProd.prodPrice})</td>
+					<td>Rp $viewutil.moneyStringFormat($!{orderProd.amount})</td>
+                    #if($!order.sellerStatus!=4&&$!order.sellerStatus!=5)
+										 <td> <a href="javascript:void(0)" onclick="showConfirm('Are you sure to delete product?',&quot;deleteOrderProd('$!{orderProd.orderProdId}')&quot;)">delete</a></td>
+										  #end
+				</tr>
+#end#end
+			<tr>
+                <tr>
+                    <td style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Actions</td>
+                    <td colspan="6" style="text-align: left; width: 80%; padding-left: 2%">
+#if($!order.sellerStatus!=4&&$!order.sellerStatus!=5)
+                        <input id="confirm" type="button" class="btnG " value="Add Shopping" style="width: 150px; height: 34px" onclick="orderProdWin($!{order.orderId})">
+                  #end
+                    </td>
+                </tr>
+
+			</tr>
+			</tbody>
+		</table>
+		<table class="table order_table mt10">
+			<tr>
+				<th colspan="4">Actions</th>
+			</tr>
+
+			<tr>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Seller Remark</td>
+				<td colspan="3"
+					style="text-align: left; width: 80%; padding-left: 2%">
+					<form id="merchantRemarkForm">
+					<input type="hidden" value="$!{order.orderId}" name="orderId">
+					<textarea name="sellerMemo" rows="5%" cols="100%" >$!{order.sellerMemo}</textarea>
+						</form>
+				#*		 #if($session.getAttribute("RcMerchant"))*#
+					<div>
+						<input type="button" value="Save"
+							style="width: 50px; height: 32px; color: #213864; background-color: #f4f5f9; border: 1px solid #B8BDD3;"
+							onclick="javascript:saveMerchantRemark($!{order.orderId});">
+					</div>
+				#*		#end*#
+					</td>
+
+			</tr>
+
+			<tr>
+				<td
+					style="text-align: right; width: 20%; padding-right: 2%; color: #afafaf">Actions</td>
+				<td colspan="4" style="text-align: left; width: 80%; padding-left: 2%">
+
+				#if(${order.sellerStatus}==3)<input id="printOrder" type="button" class="btnG  " value="Print Order" style="width: 150px; height: 34px" onclick="printCheckList($!{order.orderId});">#end
+				#if(${order.sellerStatus}==4)<input id="printReceipt" type="button" class="btnG  " value="Print Receipt" style="width: 150px; height: 34px" onclick="printReceipt();">#end
+                    #if(${order.sellerStatus}==2)<input id="confirm" type="button" class="btnG  " value="Confirm" style="width: 150px; height: 34px" onclick="confirm($!{order.orderId})">#end
+                    #if(${order.sellerStatus}==3)<input id="checkOut" type="button" class="btnG  " value="Check Out" style="width: 150px; height: 34px"  onclick="checkOut($!{order.orderId})">#end
+					#if(${order.sellerStatus}==1)<input id="checkOut" type="button" class="btnG  " value="Order Receiving" style="width: 150px; height: 34px"  onclick="orderReceiving($!{order.orderId})">#end
+			<!-- 	<input id="payAmount" type="button" value="Confirem to Cook" style="width: 150px; height: 32px; color: #213864; background-color: #f4f5f9; border: 1px solid #B8BDD3;"onclick="javascript:payAmountWin();">
+			 -->
+			#*	<input id="rejectedTransaction" type="button" value="Confirem to Cook" style="width: 150px; height: 32px; color: #213864; background-color: #f4f5f9; border: 1px solid #B8BDD3;" onclick="cook($!{order.orderId})">*#
+                    #if(${order.sellerStatus}==1||${order.sellerStatus}==2||${order.sellerStatus}==3)<input id="checkOut" type="button" class="btnG  " value="Cancel" style="width: 150px; height: 34px"  #*onclick="showConfirm('Are you sure to cancel order?',&quot;cancel('$!{order.orderId}')&quot;)"*# onclick="rejectedTransactionWin($!{order.orderId})">#end
+
+
+				</td>
+			</tr>
+		</table>
+
+	</div>
+</div>
+
+<div class="shade_layout" style="display: none;"></div>
+<!-- 濞ｈ濮為崫浣哄瀵湱鐛�-->
+<div class="pop_windows" id="selectProdWin" style="display:none;height: 700px">
+<form id="selectProdWinnForm">
+    <input type="hidden" name="orderId" value="$!{order.orderId}">
+    <div class="layout">
+        <a class="ico_close" href="javascript:close();"></a>
+        <div class="main">
+            <div class="hd">
+                <h2>Product List</h2>
+            </div>
+
+            <div class="bd_p10" style="padding: 0px" >
+                <table class="table order_table mt10" style="margin-top: 0px;margin-bottom: 0px" >
+                    <thead>
+                    <tr >
+                        <th style="width: 5%;text-align: center" onclick="quanxuan()"><a>All</a></th>
+                        <th style="width: 10%;text-align: center">Product ID</th>
+                        <th style="width: 15%;text-align: center">Product Name</th>
+                        <th style="width: 15%;text-align: center">SKU</th>
+                        <th style="width: 15%;text-align: center">Qty/Wgt</th>
+                        <th style="width: 15%;text-align: center">Price</th>
+                    </tr>
+                    </thead>
+
+
+                </table>
+            </div>
+            <div class="bd_p10" style="height: 560px;overflow-y: scroll;padding: 0px" >
+                <table class="table order_table mt10"  id="orderProds" style="margin-top: 0px">
+
+
+                    <tbody>
+
+                    </tbody>
+                </table>
+            </div>
+            <div class="popup_btn_con" id="popup_btn_con">
+                <input class="btnG bwt100 bht30 bfz16" type="button" onclick="addOrderProd($!order.orderId)" value="Submit" />
+            </div>
+        </div>
+    </div>
+</form>
+</div>
+<div class="pop_windows" id="inputDeliveryWin" style="display:none;">
+	<form id="inputDeliveryForm">
+<input type="hidden" name="orderIds" value="$!{order.orderId}">
+<!-- <input type="hidden" name="isDelivery" value="$!{order.isDelivery}"> -->
+	<div class="layout">
+		<a class="ico_close" href="javascript:close();"></a>
+		<div class="main">
+			<div class="hd">
+				<h2>Input Delivery</h2>
+			</div>
+		<div class="bd_p10" style="padding-left:82px">
+			  <div><lebel class="colortitle" style="margin-left: -34px;"><span class="colorRed">*</span><span style="margin-right:10px">Delivery Method:</span></lebel><input type="radio"  name="deliveryType" value="1" id="deliveryTypeD" checked><label for="deliveryTypeD"> Delivery Man </label> <input type="radio" name="deliveryType" id="deliveryTypeL" value="2" style="margin-left:40px"><label for="deliveryTypeL"> Logistics Company</label> </div>
+               	<div style="margin-top:20px;"><lebel class="colortitle" style="margin-left:27px"><span class="colorRed">*</span><span>Name:</span></lebel><input class="poptxt" type="text" name="dispatcherName" value=""></div>
+               		<div style="margin-top:20px;"></div>
+               	<div><lebel class="colortitle" style="margin-left: 25px;"><span class="colorRed">*</span><span>Phone:</span></lebel><input class="poptxt" type="text" name="dispatcherMobile" value=""></div>
+				<div hidden style="margin-top:20px;"><lebel class="colortitle" style="margin-left: -39px;"><span class="colorRed">*</span><span>Tracking Number:</span></lebel><input disabled class="poptxt" type="text" name="trackingNumber" value=""></div>
+				<div hidden style="margin-top:20px;"><lebel style="margin-left: -47px;" class="colortitle"><span class="colorRed">*</span><span>Logistics Company:</span></lebel><input disabled class="poptxt" type="text" name="logisticsCompany" value=""></div>
+			</div>
+			<div class="popup_btn_con" id="popup_btn_con" myvalue="">
+				<input class="btnG bwt100 bht30 bfz16" type="button" onclick="addInputDelivery()" id="readnumbtn" value="Submit">
+			</div>
+		</div>
+	</div>
+	</form>
+</div>
+
+<div class="pop_windows" id="rejectedTransactionWin" style="display:none;">
+	<form id="rejectedTransactionForm">
+<input type="hidden" name="orderId" value="$!{order.orderId}">
+	<div class="layout">
+		<a class="ico_close" href="javascript:close();"></a>
+		<div class="main">
+			<div class="hd">
+				<h2>Cancel Order</h2>
+			</div>
+		<div class="bd_p10" style="padding-left:82px">
+			  <div><lebel class="colortitle" style="margin-left: -28px;"><span class="colorRed">*</span><span style="margin-right:10px">Reason:</span></lebel>
+			  <input type="radio"  name="refundReason" value="Out of stock" id="refundReason1" checked><label for="refundReason1" style="vertical-align: middle;">Out of stock</label><br>
+			  <input type="radio" name="refundReason" id="refundReason2" value="Unable to deliver" style="margin-left:40px"><label for="refundReason2" style="vertical-align: middle;">Unable to deliver</label><br>
+			   <input type="radio" name="refundReason" id="refundReason3" value="Restaurant is closed" style="margin-left:40px"><label for="refundReason3" style="vertical-align: middle;">Restaurant is closed</label><br>
+			    <input type="radio" name="refundReason" id="refundReason4" value="" style="margin-left:40px"><label for="refundReason4" style="vertical-align: middle;">Other:</label>
+			    <input disabled class="poptxt" type="text" id="refundReasonText" value="" maxlength="60">
+			  </div>
+			</div>
+			<div class="popup_btn_con" id="popup_btn_con" myvalue="">
+				<input class="btnG bwt100 bht30 bfz16" type="button" onclick="addRejectedTransaction()" id="readnumbtn" value="Submit">
+			</div>
+		</div>
+	</div>
+	</form>
+</div>
+
+<div class="pop_windows" id="payAmountWin" style="display:none;">
+	<form id="payAmountForm">
+<input type="hidden" name="orderId" value="$!{order.orderId}">
+	<div class="layout">
+		<a class="ico_close" href="javascript:close();"></a>
+		<div class="main">
+			<div class="hd">
+				<h2>Edit Grand Total</h2>
+			</div>
+		<div class="bd_p10" style="padding-left:82px">
+
+				<div  style="margin-top:20px;"><lebel class="colortitle" style="margin-left: -39px;"><span class="colorRed">*</span><span>Grand Total:</span></lebel><span style="margin-left: 13px;">Rp $viewutil.moneyStringFormat($!{order.payPrice})</span></div>
+				<div  style="margin-top:20px;"><lebel style="margin-left: 0px;" class="colortitle"><span class="colorRed">*</span><span>Eit To:</span></lebel><input  class="poptxt" type="text" name="payPrice" value=""></div>
+			</div>
+			<div class="popup_btn_con" id="popup_btn_con" myvalue="">
+				<input class="btnG bwt100 bht30 bfz16" type="button" onclick="addPayAmount()" id="readnumbtn" value="Submit">
+			</div>
+		</div>
+	</div>
+	</form>
+</div>
+
+<div id="orderPrint" style="display:none">
+	<div style="font-weight:bold;font-size:14px;text-align:center">$!{order.merchant.name}</div>
+	<div style="font-size:10px;text-align:center"><span>$!{order.merchant.address}</span></div>
+	<div style="font-size:10px;text-align:center"><span>Tel:</span><span>$!{order.merchant.mobile}</span></div>
+	<div style="font-size:10px;text-align:center;margin-top:10px"><span>$viewutil.dateFormat(${order.createTime})</span> <span>#if($!{order.eatType}==1)Eat in#elseif($!{order.eatType}==2)Take out#end</span></div>
+	#if($!{order.tableNumber})<div style="font-size:10px;text-align:center"><span>Table:<span/><span>$!{order.sectionName}-$!{order.tableNumber}</span></div>#end
+	<div style="font-size:10px;text-align:center"><span style="margin-left:5px">No:<span/><span>$!{order.orderId}</span></div>
+	<hr style="border:1px dashed;margin:20px 0px"/>
+	<table width="100%" style="font-size:10px">
+	#if($order.orderProds&&!$order.orderProds.isEmpty())
+		#foreach($orderProd in $order.orderProds)
+		#if($!{orderProd.status}==1)
+		<tr><td colspan="3" style="font-weight:bold;padding:2px">$!{orderProd.prodName}
+		#if($orderProd.orderProdSkuPropInfos&&!$orderProd.orderProdSkuPropInfos.isEmpty())(
+			#foreach($orderProdSkuPropInfo in $orderProd.orderProdSkuPropInfos)
+				$!{orderProdSkuPropInfo.prodPropVal}
+			#end
+		)#end
+		</td></tr>
+		<tr><td width="30%" style="padding:2px">$!{orderProd.quantity}</td><td width="40%" style="padding:2px">$viewutil.moneyStringFormat($!{orderProd.prodPrice})#if($!{orderProd.priceManner}==2)/$!{orderProd.measureUnitCount}$!{orderProd.measureUnit}#end</td><td align="right" width="30%" style="padding:2px">$viewutil.moneyStringFormat($!{orderProd.amount})</td></tr>
+		#end
+		#end
+	#end
+	</table>
+	<hr style="border:1px dashed;margin:20px 0px"/>
+	<div style="font-size:10px;text-align:left"><span>Note:</span><span>$!{order.buyerMemo}</span></div>
+	<hr style="border:1px dashed;margin:20px 0px"/>
+	<div style="font-weight:bold;font-size:14px;text-align:center">*** Terima Kasih ***</div>
+</div>
+
+<div id="receiptPrint" style="display:none">
+	<div style="font-weight:bold;font-size:14px;text-align:center">$!{order.merchant.name}</div>
+	<div style="font-size:10px;text-align:center"><span>$!{order.merchant.address}</span></div>
+	<div style="font-size:10px;text-align:center"><span>Tel:</span><span>$!{order.merchant.mobile}</span></div>
+	<div style="font-size:10px;text-align:center;margin-top:10px"><span>$viewutil.dateFormat(${order.createTime})</span> <span>#if($!{order.eatType}==1)Eat in#elseif($!{order.eatType}==2)Take out#end</span></div>
+	#if($!{order.tableNumber})<div style="font-size:10px;text-align:center"><span>Table:<span/><span>$!{order.sectionName}-$!{order.tableNumber}</span></div>#end
+	<div style="font-size:10px;text-align:center"><span style="margin-left:5px">No:<span/><span>$!{order.orderId}</span></div>
+	<hr style="border:1px dashed;margin:20px 0px"/>
+	<table width="100%" style="font-size:12px">
+	#if($order.orderProds&&!$order.orderProds.isEmpty())
+		#foreach($orderProd in $order.orderProds)
+		<tr><td colspan="3" style="font-weight:bold;padding:2px">$!{orderProd.prodName}
+		#if($orderProd.orderProdSkuPropInfos&&!$orderProd.orderProdSkuPropInfos.isEmpty())(
+			#foreach($orderProdSkuPropInfo in $orderProd.orderProdSkuPropInfos)
+				$!{orderProdSkuPropInfo.prodPropVal}
+			#end
+		)#end
+		</td></tr>
+		<tr><td width="30%" style="padding:2px">$!{orderProd.quantity}</td><td width="40%" style="padding:2px">$viewutil.moneyStringFormat($!{orderProd.prodPrice})#if($!{orderProd.priceManner}==2)/$!{orderProd.measureUnitCount}$!{orderProd.measureUnit}#end</td><td align="right" width="30%" style="padding:2px">$viewutil.moneyStringFormat($!{orderProd.amount})</td></tr>
+		#end
+	#end
+	</table>
+	<hr style="border:1px dashed;margin:20px 0px"/>
+	<table width="100%" style="font-size:12px">
+		<tr><td align="right" style="padding:2px">Sub Total:</td><td width="30%" align="right" style="padding:2px">$viewutil.moneyStringFormat($order.productPrice)</td></tr>
+		<tr><td align="right" style="padding:2px">Service Fee $viewutil.formatPercent($order.merchant.serviceCharge):</td><td align="right" style="padding:2px">$viewutil.moneyStringFormat($!{order.serviceFee})</td></tr>
+		<tr><td align="right" style="padding:2px">Tax $viewutil.formatPercent($order.merchant.taxRate):</td><td align="right" style="padding:2px">$viewutil.moneyStringFormat($!{order.tax})</td></tr>
+		<tr><td align="right" style="padding:2px">Rounding:</td><td align="right" style="padding:2px">$viewutil.moneyStringFormat($!{order.rounding.abs()})</td></tr>
+		<tr><td align="right" style="padding:2px">Grand Total:</td><td align="right" style="padding:2px">Rp.$viewutil.moneyStringFormat($!{order.payPrice})</td></tr>
+	</table>
+	<hr style="border:1px dashed;margin:20px 0px"/>
+	<div style="font-weight:bold;font-size:14px;text-align:center">*** Terima Kasih ***</div>
+</div>
+
+<

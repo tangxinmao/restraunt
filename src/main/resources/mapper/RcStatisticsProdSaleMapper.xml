@@ -1,0 +1,133 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.socool.soft.dao.RcStatisticsProdSaleMapper">
+    <resultMap id="BaseResultMap" type="com.socool.soft.bo.RcStatisticsProdSale">
+        <id column="statistics_prod_sale_id" property="statisticsProdSaleId" jdbcType="BIGINT"/>
+        <result column="merchant_id" property="merchantId" jdbcType="INTEGER"/>
+        <result column="prod_id" property="prodId" jdbcType="INTEGER"/>
+        <result column="sale_sum" property="saleSum" jdbcType="INTEGER"/>
+        <result column="create_time" property="createTime" jdbcType="DATE"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        statistics_prod_sale_id, merchant_id, prod_id, sale_sum, create_time
+    </sql>
+
+    <insert id="insertAndStatistics">
+        INSERT INTO `rc_statistics_prod_sale` (`merchant_id`, `prod_id`, `sale_sum`, `create_time`)
+        SELECT
+        p.MERCHANT_ID,p.PROD_ID,
+        ifnull((sum(op.QUANTITY)),0) as sale_sum,
+        #{startTime}
+        FROM rc_prod p
+        LEFT JOIN rc_order_prod op on op.PROD_ID=p.PROD_ID
+        LEFT JOIN rc_order o on o.ORDER_ID=op.ORDER_ID
+        WHERE
+        p.MERCHANT_ID &gt; 0
+        and o.SELLER_STATUS=5
+        and o.CREATE_TIME &gt;= #{startTime}
+        and o.CREATE_TIME &lt; #{endTime}
+        GROUP BY p.PROD_ID
+    </insert>
+
+    <select id="select" resultMap="BaseResultMap" parameterType="com.socool.soft.bo.RcStatisticsProdSale">
+        select
+        <include refid="Base_Column_List"/>
+        from rc_statistics_prod_sale
+        <where>
+            <if test="merchantId != null">
+                and merchant_id = #{merchantId,jdbcType=INTEGER}
+            </if>
+            <if test="prodId != null">
+                and prod_id = #{prodId,jdbcType=INTEGER}
+            </if>
+            <if test="saleSum != null">
+                and sale_sum = #{saleSum,jdbcType=INTEGER}
+            </if>
+            <if test="createTime != null">
+                and create_time = #{createTime,jdbcType=DATE}
+            </if>
+        </where>
+    </select>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from rc_statistics_prod_sale
+        where statistics_prod_sale_id = #{statisticsProdSaleId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from rc_statistics_prod_sale
+        where statistics_prod_sale_id = #{statisticsProdSaleId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.socool.soft.bo.RcStatisticsProdSale">
+        insert into rc_statistics_prod_sale (statistics_prod_sale_id, merchant_id,
+        prod_id, sale_sum, create_time
+        )
+        values (#{statisticsProdSaleId,jdbcType=BIGINT}, #{merchantId,jdbcType=INTEGER},
+        #{prodId,jdbcType=INTEGER}, #{saleSum,jdbcType=INTEGER}, #{createTime,jdbcType=DATE}
+        )
+    </insert>
+    <insert id="insertSelective" parameterType="com.socool.soft.bo.RcStatisticsProdSale">
+        insert into rc_statistics_prod_sale
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="statisticsProdSaleId != null">
+                statistics_prod_sale_id,
+            </if>
+            <if test="merchantId != null">
+                merchant_id,
+            </if>
+            <if test="prodId != null">
+                prod_id,
+            </if>
+            <if test="saleSum != null">
+                sale_sum,
+            </if>
+            <if test="createTime != null">
+                create_time,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="statisticsProdSaleId != null">
+                #{statisticsProdSaleId,jdbcType=BIGINT},
+            </if>
+            <if test="merchantId != null">
+                #{merchantId,jdbcType=INTEGER},
+            </if>
+            <if test="prodId != null">
+                #{prodId,jdbcType=INTEGER},
+            </if>
+            <if test="saleSum != null">
+                #{saleSum,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                #{createTime,jdbcType=DATE},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.socool.soft.bo.RcStatisticsProdSale">
+        update rc_statistics_prod_sale
+        <set>
+            <if test="merchantId != null">
+                merchant_id = #{merchantId,jdbcType=INTEGER},
+            </if>
+            <if test="prodId != null">
+                prod_id = #{prodId,jdbcType=INTEGER},
+            </if>
+            <if test="saleSum != null">
+                sale_sum = #{saleSum,jdbcType=INTEGER},
+            </if>
+            <if test="createTime != null">
+                create_time = #{createTime,jdbcType=DATE},
+            </if>
+        </set>
+        where statistics_prod_sale_id = #{statisticsProdSaleId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.socool.soft.bo.RcStatisticsProdSale">
+        update rc_statistics_prod_sale
+        set merchant_id = #{merchantId,jdbcType=INTEGER},
+        prod_id = #{prodId,jdbcType=INTEGER},
+        sale_sum = #{saleSum,jdbcType=INTEGER},
+        create_time = #{createTime,jdbcType=DATE}
+        where statistics_prod_sale_id = #{statisticsProdSaleId,jdbcType=BIGINT}
+    </update>
+</mapper>

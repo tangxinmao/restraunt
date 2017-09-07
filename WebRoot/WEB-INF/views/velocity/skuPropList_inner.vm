@@ -1,0 +1,31 @@
+<table class="table order_table mt10" id="table">
+	<th>Name</th>
+	<th style="display:none">Has different pictures</th>
+	<th style="display:none">Is Applicator</th>
+	<th style="display:none">Actions</th>
+	#set($number=1)
+	#foreach($prop in $list)
+		#if($number==1)
+			<tr onclick="showEnumList('$prop.prodPropId',this)" class="selectedC">
+		#else
+			<tr onclick="showEnumList('$prop.prodPropId',this)">
+		#end
+			<td>$prop.name</td>
+			<td style="display:none">
+				#if($prop.hasImg==1)yes #else no #end
+			</td>
+			<td style="display:none">
+				#if($prop.isPackService==1)yes #else no #end
+			</td>
+			<td style="display:none">
+				<a href="javascript:void(0)" onclick="editSkuPropPopup('$prop.prodPropId',this)">Edit</a> |
+				<a href="javascript:void(0)" onclick="showConfirm('Are you sure to delete the property? If you deleted,The Value belong to the property will be delete.',&quot;deleteOneProp('$prop.prodPropId',1)&quot;)">Delete</a>
+			</td>
+		</tr>
+	#end
+</table>
+<input type="hidden" value="$!page.currentPage" id="currentPage">
+<input id="page_pageSize" type="hidden" value="$page.pageSize" />
+<input id="page_totalRows" type="hidden" value="$page.totalRows" />
+<div id="pageNm_tip" style="text-align: right; color:red; margin-bottom:20px;display:none;"></div>
+<div class="page_wrap" style="padding-left: 10px;display:none;">#vm_page2</div>

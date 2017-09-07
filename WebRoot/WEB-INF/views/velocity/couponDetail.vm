@@ -1,0 +1,117 @@
+#set($layout = "layout/main.vm") 
+#set($title ="Brand list" ) 
+#set($extCss ="/static/css/jquery-ui-timepicker-addon.min.css") 
+#set($extJs ="/static/js/coupon.js,/static/js/jquery.ui.datepicker.js,/static/js/ajaxfileupload.js")
+#set($root=$request.getContextPath())
+<input type="hidden" value="$root" id="rootPath">
+<div class="rightContent fl">
+	<div class="tpos ml30 mt25" style="border-bottom-width: 0px">
+		<h1 class="fl">Voucher Management > #if(!$!{coupon.couponId}) Add #else Edit #end Voucher</h1>
+		<div class="fr mt10">
+			<input type="button" value="Back to Voucher Management"
+				style="width: 200px; height: 32px; color: #213864; background-color: #f4f5f9; border: 1px solid #B8BDD3;"
+				onclick="javascript:window.location.href='$root/coupons/couponIndex'">
+		</div>
+	</div>
+	<div class="service_wrap clearfix entG" id="productListDiv" style="padding: 3%;margin: 0 2%;">
+	<div class="step_group">
+	<form id="couponDetailForm">
+	<input type="hidden" name="couponId" value="$!{coupon.couponId}" >
+     <input type="hidden" id="merchant" value="$!{dd}" >
+				<p>
+					<label>
+						<span class="colorRed">*</span>
+						<span>Voucher Type:</span>
+					</label>
+					<select name="couponType" class="text" name="couponType" id="couponType" onchange="changecouponType()">
+						<option value="1">Category</option>
+						<option value="2">Product</option>
+					</select>
+				</p>
+				<p id="ownerArea">
+					<label>
+						<span class="colorRed">*</span>
+						<span>Category:</span>
+					</label>
+					<select class="text"  name="prodCatId" id="prodCatId">
+						<option value="0">Select...</option>
+						#foreach($category in $categoryList)
+							<option value="$category.prodCatId">$category.name</option>
+						#end
+					</select>
+				</p>
+				<p id="prodArea" style="display:none;">
+					<label>
+						<span class="colorRed">*</span>
+						<span>Product:</span>
+					</label>
+					<input type="hidden" value="" name="prodId" id="prodId">
+					<input type="text" value=""  name="prodName"  id="prodName" onclick="openchosewindow()" style="width:400px" class="text" maxlength="100">
+				</p>
+				<p>
+					<label>
+						<span class="colorRed">*</span>
+						<span>Voucher Name:</span>
+					</label>
+					<input type="text" value="$!{coupon.name}"  name="name" style="width:400px" class="text" maxlength="20">
+				</p>
+				<p id="quantity" style="display:none">
+					<label>
+						<span class="colorRed">*</span>
+						<span>Voucher Quantity:</span>
+					</label>
+					<input type="text" value="$!{coupon.initCount}"  name="initCount" style="width:400px" class="text" maxlength="5">
+				</p>
+				<p>
+					<label>
+						<span class="colorRed">*</span>
+						<span>Date</span> From:
+					</label>
+				<input class="poptxt" type="text" value="$!viewutil.dateFormat($!{coupon.effectTime})" name="effectTime" style="margin-left: 0px;width: 175px;margin-right:18px">to
+				<label hidden>
+						<span class="colorRed">*</span>
+						<span>Date</span> From:
+					</label>
+				<input class="poptxt" type="text"value="$!viewutil.dateFormat($!{coupon.expireTime})" name="expireTime" style="width: 176px;">
+				</p>
+				<p id="minimum" style="display:none">
+					<label>
+						<span class="colorRed">*</span>
+						<span>Minimum Buy Price:</span>
+					</label>
+					<input type="text" value="$!{coupon.baseAmount}" name="baseAmount" style="width:400px" class="text" maxlength="14">
+				</p>
+				<p>
+					<label>
+						<span class="colorRed">*</span>
+						<span>Discount Type:</span>
+					</label>
+					<select name="discountType" class="text" name="discountType" id="discountType">
+						<option value="1">Percent</option>
+						<option value="2">Amount</option>
+					</select>
+				</p>
+				<p>
+					<label>
+						<span class="colorRed">*</span>
+						<span>Voucher Discount:</span>
+					</label>
+					<input type="number" oninput="if(value.length>14)value=value.slice(0,14)" value="$!{coupon.amount}"  name="amount" style="width:400px" class="text" maxlength="14">
+				</p>
+			</form>
+			<div class="btns tac mt25 pb15">
+				<input type="button" class="btnG bwt100 bht30 bfz16" value="Save"  style="color: #ffffff; background-color: #27d0d8;" onclick="addCoupon()" style="margin-left:20px;">
+				<input type="button" value="Cancel" style="margin-left: 12px;color:#ffffff;background-color: #ff8b1e;" class="btnO bwt100 bht30 bfz16" onclick="javascript:window.location.href='$root/coupons/couponIndex'">
+			</div>
+			</div>
+		
+	
+</div>
+	<div class="entG">
+			<div id="screen3" style="text-align: center; margin-top: 100px;display:none;">
+				<h1 style="font-size: 70px; color: #3f326d;">Success!</h1>
+				<input type="button" class="btnG bwt100 bht30 bfz16" style="margin-bottom: 20px; margin-top: 100px;" value="Continue" onclick="javascript:location.reload();" style="margin-top: 100px;">
+			</div>
+			</div>
+</div>
+<div class="pop_windows" id="open_returnPop" style="display: none;"></div>

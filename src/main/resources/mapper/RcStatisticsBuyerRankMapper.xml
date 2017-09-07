@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="com.socool.soft.dao.RcStatisticsBuyerRankMapper">
+    <resultMap id="BaseResultMap" type="com.socool.soft.bo.RcStatisticsBuyerRank">
+        <id column="statistics_buyer_rank_id" property="statisticsBuyerRankId" jdbcType="BIGINT"/>
+        <result column="merchant_id" property="merchantId" jdbcType="INTEGER"/>
+        <result column="buyer_id" property="buyerId" jdbcType="INTEGER"/>
+        <result column="order_count" property="orderCount" jdbcType="INTEGER"/>
+    </resultMap>
+    <sql id="Base_Column_List">
+        statistics_buyer_rank_id, merchant_id, buyer_id, order_count
+    </sql>
+
+    <insert id="insertAndStatistics">
+        INSERT INTO `rc_statistics_buyer_rank` (`merchant_id`, `buyer_id`, `order_count`)
+        SELECT
+        o.MERCHANT_ID,
+        o.BUYER_ID,
+        count(1) as order_count
+        FROM rc_order o
+        WHERE
+        o.SELLER_STATUS=5
+        GROUP BY o.MERCHANT_ID,o.BUYER_ID
+    </insert>
+
+    <select id="select" resultMap="BaseResultMap" parameterType="com.socool.soft.bo.RcStatisticsBuyerRank">
+        select
+        <include refid="Base_Column_List"/>
+        from rc_statistics_buyer_rank
+        <where>
+            <if test="merchantId != null">
+                and merchant_id = #{merchantId,jdbcType=INTEGER}
+            </if>
+            <if test="buyerId != null">
+                and buyer_id = #{buyerId,jdbcType=INTEGER}
+            </if>
+            <if test="orderCount != null">
+                and order_count = #{orderCount,jdbcType=INTEGER}
+            </if>
+        </where>
+    </select>
+
+    <delete id="deleteAll">
+        truncate table rc_statistics_buyer_rank
+    </delete>
+
+    <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Long">
+        select
+        <include refid="Base_Column_List"/>
+        from rc_statistics_buyer_rank
+        where statistics_buyer_rank_id = #{statisticsBuyerRankId,jdbcType=BIGINT}
+    </select>
+    <delete id="deleteByPrimaryKey" parameterType="java.lang.Long">
+        delete from rc_statistics_buyer_rank
+        where statistics_buyer_rank_id = #{statisticsBuyerRankId,jdbcType=BIGINT}
+    </delete>
+    <insert id="insert" parameterType="com.socool.soft.bo.RcStatisticsBuyerRank">
+        insert into rc_statistics_buyer_rank (statistics_buyer_rank_id, merchant_id,
+        buyer_id, order_count)
+        values (#{statisticsBuyerRankId,jdbcType=BIGINT}, #{merchantId,jdbcType=INTEGER},
+        #{buyerId,jdbcType=INTEGER}, #{orderCount,jdbcType=INTEGER})
+    </insert>
+    <insert id="insertSelective" parameterType="com.socool.soft.bo.RcStatisticsBuyerRank">
+        insert into rc_statistics_buyer_rank
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="statisticsBuyerRankId != null">
+                statistics_buyer_rank_id,
+            </if>
+            <if test="merchantId != null">
+                merchant_id,
+            </if>
+            <if test="buyerId != null">
+                buyer_id,
+            </if>
+            <if test="orderCount != null">
+                order_count,
+            </if>
+        </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="statisticsBuyerRankId != null">
+                #{statisticsBuyerRankId,jdbcType=BIGINT},
+            </if>
+            <if test="merchantId != null">
+                #{merchantId,jdbcType=INTEGER},
+            </if>
+            <if test="buyerId != null">
+                #{buyerId,jdbcType=INTEGER},
+            </if>
+            <if test="orderCount != null">
+                #{orderCount,jdbcType=INTEGER},
+            </if>
+        </trim>
+    </insert>
+    <update id="updateByPrimaryKeySelective" parameterType="com.socool.soft.bo.RcStatisticsBuyerRank">
+        update rc_statistics_buyer_rank
+        <set>
+            <if test="merchantId != null">
+                merchant_id = #{merchantId,jdbcType=INTEGER},
+            </if>
+            <if test="buyerId != null">
+                buyer_id = #{buyerId,jdbcType=INTEGER},
+            </if>
+            <if test="orderCount != null">
+                order_count = #{orderCount,jdbcType=INTEGER},
+            </if>
+        </set>
+        where statistics_buyer_rank_id = #{statisticsBuyerRankId,jdbcType=BIGINT}
+    </update>
+    <update id="updateByPrimaryKey" parameterType="com.socool.soft.bo.RcStatisticsBuyerRank">
+        update rc_statistics_buyer_rank
+        set merchant_id = #{merchantId,jdbcType=INTEGER},
+        buyer_id = #{buyerId,jdbcType=INTEGER},
+        order_count = #{orderCount,jdbcType=INTEGER}
+        where statistics_buyer_rank_id = #{statisticsBuyerRankId,jdbcType=BIGINT}
+    </update>
+</mapper>
